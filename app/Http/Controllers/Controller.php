@@ -13,6 +13,26 @@ class Controller extends BaseController
     use AuthorizesRequests, DispatchesJobs, ValidatesRequests;
 
     /**
+     * Get the user id to be used during authentication.
+     *
+     * @return mixed
+     */
+    protected function userId()
+    {
+        return $this->guard()->user()->id;
+    }
+
+    /**
+     * Get the user to be used during authentication.
+     *
+     * @return \Illuminate\Contracts\Auth\Authenticatable|null
+     */
+    protected function user()
+    {
+        return $this->guard()->user();
+    }
+
+    /**
      * Get the guard to be used during authentication.
      *
      * @return \Illuminate\Contracts\Auth\StatefulGuard
