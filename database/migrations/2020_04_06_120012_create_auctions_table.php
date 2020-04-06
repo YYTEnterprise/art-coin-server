@@ -4,7 +4,7 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateAuctionTable extends Migration
+class CreateAuctionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,7 @@ class CreateAuctionTable extends Migration
      */
     public function up()
     {
-        Schema::create('auction', function (Blueprint $table) {
+        Schema::create('auctions', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('product_id');
             $table->string('title')->comment('拍卖标题');
@@ -24,6 +24,7 @@ class CreateAuctionTable extends Migration
             $table->unsignedBigInteger('fixed_price')->nullable()->comment('一口价');
             $table->unsignedBigInteger('price')->nullable()->comment('实际竞拍价格');
             $table->integer('big_period')->comment('竞价周期');
+            $table->integer('status')->comment('竞拍状态：未开始、竞拍中、流拍、竞拍完成');
             $table->timestamp('started_at')->nullable()->comment('开始时间');
             $table->timestamp('ended_at')->nullable()->comment('结束时间');
             $table->timestamps();
@@ -37,6 +38,6 @@ class CreateAuctionTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('auction');
+        Schema::dropIfExists('auctions');
     }
 }
