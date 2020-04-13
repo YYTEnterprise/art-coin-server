@@ -26,9 +26,7 @@ class ProductController extends Controller
             $per_page = $request->input('per_page');
         }
 
-        $userId = $this->userId();
-
-        return Product::where('user_id', $userId)->paginate($per_page);
+        return $this->user()->products()->paginate($per_page);
     }
 
     /**
@@ -69,9 +67,7 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-        $userId = $this->userId();
-
-        return Product::where('user_id', $userId)->findOrFail($id);
+        return $this->user()->products()->findOrFail($id);
     }
 
     /**
@@ -83,9 +79,7 @@ class ProductController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $userId = $this->userId();
-
-        $product = Product::where('user_id', $userId)->findOrFail($id);
+        $product = $this->user()->products()->findOrFail($id);
 
         $product->update($request->only([
             'type',
@@ -107,34 +101,22 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        $userId = $this->userId();
-
-        Product::where('user_id', $userId)->findOrFail($id);
-
-        Product::destroy($id);
+        $this->user()->products()->findOrFail($id)->delete();
 
         return new Response('', 200);
     }
 
     public function onsale($id)
     {
-        $userId = $this->userId();
+        $this->user()->products()->findOrFail($id)->update(['on_sale' => true]);
 
-        $product = Product::where('user_id', $userId)->findOrFail($id);
-
-        $product->update(['on_sale' => true]);
-
-        return $product;
+        return new Response('', 200);
     }
 
     public function offsale($id)
     {
-        $userId = $this->userId();
+        $this->user()->products()->findOrFail($id)->update(['on_sale' => false]);
 
-        $product = Product::where('user_id', $userId)->findOrFail($id);
-
-        $product->update(['on_sale' => false]);
-
-        return $product;
+        return new Response('', 200);
     }
 }

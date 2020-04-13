@@ -63,4 +63,9 @@ class User extends Authenticatable implements MustVerifyEmail
             'follow_user_id'
         )->withTimestamps();
     }
+
+    public function products()
+    {
+        return $this->hasMany(Product::class);
+    }
 }
