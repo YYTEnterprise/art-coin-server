@@ -115,4 +115,26 @@ class ProductController extends Controller
 
         return new Response('', 200);
     }
+
+    public function onsale($id)
+    {
+        $userId = $this->userId();
+
+        $product = Product::where('user_id', $userId)->findOrFail($id);
+
+        $product->update(['on_sale' => true]);
+
+        return $product;
+    }
+
+    public function offsale($id)
+    {
+        $userId = $this->userId();
+
+        $product = Product::where('user_id', $userId)->findOrFail($id);
+
+        $product->update(['on_sale' => false]);
+
+        return $product;
+    }
 }

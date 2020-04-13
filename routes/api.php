@@ -33,6 +33,9 @@ Route::middleware(['auth:api'])->group(function () {
         Route::post('/', 'ProductController@store');
         Route::put('/{id}', 'ProductController@update');
         Route::delete('/{id}', 'ProductController@destroy');
+
+        Route::post('/{id}/onsale', 'ProductController@onsale');
+        Route::post('/{id}/offsale', 'ProductController@offsale');
     });
 
     Route::prefix('users')->group(function () {
