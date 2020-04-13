@@ -29,6 +29,14 @@ Route::middleware(['api'])->group(function () {
 
 // User Api
 Route::middleware(['auth:api'])->group(function () {
+    Route::prefix('auctions')->group(function () {
+        Route::get('/', 'AuctionController@index');
+        Route::get('/{id}', 'AuctionController@show');
+        Route::post('/', 'AuctionController@store');
+        Route::put('/{id}', 'AuctionController@update');
+        Route::delete('/{id}', 'AuctionController@destroy');
+    });
+
     Route::prefix('products')->group(function () {
         Route::get('/', 'ProductController@index');
         Route::get('/{id}', 'ProductController@show');
