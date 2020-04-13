@@ -25,7 +25,7 @@ class User extends Authenticatable implements MustVerifyEmail
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token',
+        'password', 'remember_token', 'email_verified_at', 'api_token', 'pivot'
     ];
 
     /**
@@ -45,12 +45,22 @@ class User extends Authenticatable implements MustVerifyEmail
     // 关注我的人，相当于微博中的“粉丝”
     public function followers()
     {
-        return $this->hasMany(UserFollow::class, 'follow_user_id', 'id');
+        return $this->belongsToMany(
+            User::class,
+            'user_follows',
+            'follow_user_id',
+            'user_id'
+        )->withTimestamps();
     }
 
     // 我关注的人，相当于微博中的“关注”
     public function followings()
     {
-        return $this->hasMany(UserFollow::class, 'user_id', 'id');
+        return $this->belongsToMany(
+            User::class,
+            'user_follows',
+            'user_id',
+            'follow_user_id'
+        )->withTimestamps();
     }
 }
