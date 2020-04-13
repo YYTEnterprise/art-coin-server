@@ -23,6 +23,8 @@ Route::middleware(['api'])->group(function () {
         Route::get('/', 'MarketController@index');
         Route::get('/{id}', 'MarketController@show');
     });
+
+    Route::post('/products/{id}/likes', 'UserProductLikeController@likeList');
 });
 
 // User Api
@@ -36,6 +38,9 @@ Route::middleware(['auth:api'])->group(function () {
 
         Route::post('/{id}/onsale', 'ProductController@onsale');
         Route::post('/{id}/offsale', 'ProductController@offsale');
+
+        Route::post('/{id}/like', 'UserProductLikeController@like');
+        Route::post('/{id}/unlike', 'UserProductLikeController@unlike');
     });
 
     Route::prefix('users')->group(function () {
