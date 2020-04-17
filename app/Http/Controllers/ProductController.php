@@ -26,7 +26,7 @@ class ProductController extends Controller
             $per_page = $request->input('per_page');
         }
 
-        return $this->user()->products()->paginate($per_page);
+        return $this->user()->products()->withCount('likes')->paginate($per_page);
     }
 
     /**
@@ -76,7 +76,7 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-        return $this->user()->products()->findOrFail($id);
+        return $this->user()->products()->withCount('likes')->findOrFail($id);
     }
 
     /**
