@@ -15,8 +15,9 @@ class CreateWalletsTable extends Migration
     {
         Schema::create('wallets', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('free_balance');
-            $table->unsignedBigInteger('lock_balance');
+            $table->unsignedBigInteger('user_id')->unique();
+            $table->decimal('free_amount', 10, 4)->default(0)->comment('可用金额');
+            $table->decimal('lock_amount', 10, 4)->default(0)->comment('锁定金额');
             $table->timestamps();
         });
     }

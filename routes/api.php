@@ -52,6 +52,8 @@ Route::middleware(['auth:api'])->group(function () {
     });
 
     Route::prefix('users')->group(function () {
+        Route::post('/settings', 'UserController@updateSettings');
+
         Route::post('/follow', 'UserFollowController@follow');
         Route::post('/unfollow', 'UserFollowController@unfollow');
         Route::get('/followers', 'UserFollowController@followerList');

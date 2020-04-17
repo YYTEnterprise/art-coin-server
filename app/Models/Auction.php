@@ -24,6 +24,6 @@ class Auction extends Model
     // 当前竞标用户
     public function bidUser()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'bid_user_id');
     }
 }

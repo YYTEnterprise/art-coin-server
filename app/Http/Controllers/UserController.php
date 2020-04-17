@@ -2,7 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use App\User;
+use App\Models\User;
+use App\Models\Wallet;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Foundation\Auth\ThrottlesLogins;
 use Illuminate\Http\Request;
@@ -47,6 +48,7 @@ class UserController extends Controller
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
+        $user->wallet()->save(new Wallet());
 
         event(new Registered($user));
 
@@ -81,6 +83,25 @@ class UserController extends Controller
         return $this->sendFailedLoginResponse($request);
     }
 
+    public function updateSettings(Request $request)
+    {
+        $request->validate([
+            'nickname' => 'string|max:20',
+            'avatar_url' => 'string|max:255',
+            'cover_image_url' => 'string|max:255',
+        ]);
+
+        $userId = $this->userId();
+        $user = User::findOrFail($userId);
+        $user->update($request->only([
+            'nickname',
+            'avatar_url',
+            'cover_image_url',
+        ]));
+
+        return $user;
+    }
+
     /**
      * Attempt to log the user into the application.
      *
@@ -109,21 +130,24 @@ class UserController extends Controller
      * Send the response after the user was authenticated.
      *
      * @param Request $request
-     * @return array
+     * @return mixed
      */
     protected function sendLoginResponse(Request $request)
     {
         $this->clearLoginAttempts($request);
 
+        $apiToken = Str::random(60);
         $user = $this->guard()->user();
-        $user['api_token'] = Str::random(60);
+        $user['api_token'] = $apiToken;
         $user->save();
 
-        return [
-            'name' => $user['name'],
-            'email' => $user['email'],
-            'api_token' => $user['api_token'],
-        ];
+        $user = User::withCount('products')
+            ->withCount('followers')
+            ->with('wallet')
+            ->findOrFail($user['id']);
+        $user['token'] = $apiToken;
+
+        return $user;
     }
 
     /**
