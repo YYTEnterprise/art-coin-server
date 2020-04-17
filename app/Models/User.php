@@ -69,8 +69,15 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Product::class);
     }
 
+    // 用户在自己产品下创建的所有拍卖
     public function auctions()
     {
-        return $this->hasMany(Auction::class);
+        return $this->hasManyThrough(Auction::class, Product::class);
+    }
+
+    // 用户参与的竞标，且用户出价最高
+    public function bidAuctions()
+    {
+        return $this->hasMany(Auction::class, 'bid_user_id');
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Auction;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class AuctionController extends Controller
 {
@@ -38,14 +39,29 @@ class AuctionController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'required|string',
+            'product_id' => 'integer|exists:products,id',
+            'start_price' => 'required|numeric',
+            'step_price' => 'required|numeric',
+            'fixed_price' => 'numeric',
+            'start_at' => 'required|date',
+            'end_at' => 'required|date',
         ]);
 
-        Auction::create([
-            'title' => $request->input('title'),
-            'description' => $request->input('description'),
-        ]);
+        $auction = Auction::where('product_id', $request->input('product_id'))
+            ->whereIn('status', ['initial', 'bidding'])
+            ->first();
+        if($auction) {
+            throw new BadRequestHttpException('Cannot create new auction, an existed auction has not finished yet');
+        }
+
+        Auction::create($request->only([
+            'product_id',
+            'start_price',
+            'step_price',
+            'fixed_price',
+            'start_at',
+            'end_at',
+        ]));
 
         return new Response('', 201);
     }
@@ -71,11 +87,22 @@ class AuctionController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'start_price' => 'numeric',
+            'step_price' => 'numeric',
+            'fixed_price' => 'numeric',
+            'start_at' => 'date',
+            'end_at' => 'date',
+        ]);
+
         $auction = $this->user()->auctions()->findOrFail($id);
 
         $auction->update($request->only([
-            'title',
-            'description',
+            'start_price',
+            'step_price',
+            'fixed_price',
+            'start_at',
+            'end_at',
         ]));
 
         return $auction;

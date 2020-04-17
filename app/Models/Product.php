@@ -42,4 +42,10 @@ class Product extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    // 拍卖，sale_way = auction 时存在该数据
+    public function auction()
+    {
+        return $this->hasOne(Auction::class);
+    }
 }
