@@ -20,7 +20,7 @@ class CreateUserProductLikesTable extends Migration
 
             $table->unique([
                 'user_id',
-                'follow_user_id',
+                'product_id',
             ]);
         });
     }
