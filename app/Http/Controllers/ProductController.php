@@ -38,23 +38,32 @@ class ProductController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'type' => 'required|string|in:art,idea,memory',
             'title' => 'required|string|max:255',
-            'description' => 'required|string',
-            'image' => 'required|string|max:255',
-            'on_sale' => 'required|boolean',
+            'brief_desc' => 'required|string',
+            'detail_desc' => 'required|string',
+            'cover_image' => 'required|string|max:255',
             'price' => 'required|numeric',
+            'deliver_type' => 'required|string|in:express,email',
+            'has_deliver_fee' => 'required_if:deliver_type,express|boolean',
+            'has_tariff' => 'required_if:deliver_type,express|boolean',
+            'deliver_remark' => 'required_if:deliver_type,email|string',
+            'on_sale' => 'boolean',
+            'sale_way' => 'required|string|in:direct,auction',
         ]);
 
-        Product::create([
-            'user_id' => $this->userId(),
-            'type' => $request->input('type'),
-            'title' => $request->input('title'),
-            'description' => $request->input('description'),
-            'image' => $request->input('image'),
-            'on_sale' => $request->input('on_sale'),
-            'price' => $request->input('price'),
-        ]);
+        $this->user()->products()->create($request->only([
+            'title',
+            'brief_desc',
+            'detail_desc',
+            'cover_image',
+            'price',
+            'deliver_type',
+            'has_deliver_fee',
+            'has_tariff',
+            'deliver_remark',
+            'on_sale',
+            'sale_way',
+        ]));
 
         return new Response('', 201);
     }
@@ -79,15 +88,34 @@ class ProductController extends Controller
      */
     public function update(Request $request, $id)
     {
+        $request->validate([
+            'title' => 'string|max:255',
+            'brief_desc' => 'string',
+            'detail_desc' => 'string',
+            'cover_image' => 'string|max:255',
+            'price' => 'numeric',
+            'deliver_type' => 'string|in:express,email',
+            'has_deliver_fee' => 'required_if:deliver_type,express|boolean',
+            'has_tariff' => 'required_if:deliver_type,express|boolean',
+            'deliver_remark' => 'required_if:deliver_type,email|string',
+            'on_sale' => 'boolean',
+            'sale_way' => 'string|in:direct,auction',
+        ]);
+
         $product = $this->user()->products()->findOrFail($id);
 
         $product->update($request->only([
-            'type',
             'title',
-            'description',
-            'image',
-            'on_sale',
+            'brief_desc',
+            'detail_desc',
+            'cover_image',
             'price',
+            'deliver_type',
+            'has_deliver_fee',
+            'has_tariff',
+            'deliver_remark',
+            'on_sale',
+            'sale_way',
         ]));
 
         return $product;

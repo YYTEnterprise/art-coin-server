@@ -6,15 +6,24 @@ use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
-    const TYPE_ART = 'art';
-    const TYPE_IDEA = 'idea';
-    const TYPE_MEMORY = 'memory';
-
     protected $fillable = [
-        'title', 'description', 'image', 'on_sale', 'price', 'type', 'user_id',
+        'user_id',
+        'title',
+        'brief_desc',
+        'detail_desc',
+        'cover_image',
+        'price',
+        'deliver_type',
+        'has_deliver_fee',
+        'has_tariff',
+        'deliver_remark',
+        'on_sale',
+        'sale_way',
     ];
 
     protected $casts = [
+        'has_deliver_fee' => 'boolean',
+        'has_tariff' => 'boolean',
         'on_sale' => 'boolean',
     ];
 
@@ -27,5 +36,10 @@ class Product extends Model
             'product_id',
             'user_id'
         )->withTimestamps();
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }
