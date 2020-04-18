@@ -59,4 +59,9 @@ Route::middleware(['auth:api'])->group(function () {
         Route::get('/followers', 'UserFollowController@followerList');
         Route::get('/followings', 'UserFollowController@followingLIst');
     });
+
+    Route::prefix('images')->group(function () {
+        Route::post('/upload', 'ImageController@upload');
+        Route::delete('/{image_path}', 'ImageController@destroy');
+    });
 });
