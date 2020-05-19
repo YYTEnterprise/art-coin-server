@@ -48,7 +48,7 @@ class AuctionController extends Controller
         ]);
 
         $auction = Auction::where('product_id', $request->input('product_id'))
-            ->whereIn('status', ['initial', 'bidding'])
+            ->whereIn('status', [Auction::STATUS_INITIAL, Auction::STATUS_BIDDING])
             ->first();
         if($auction) {
             throw new BadRequestHttpException('Cannot create new auction, an existed auction has not finished yet');
@@ -117,6 +117,87 @@ class AuctionController extends Controller
     public function destroy($id)
     {
         $this->user()->auctions()->findOrFail($id)->delete();
+
+        return new Response('', 200);
+    }
+
+    /**
+     * 开始竞拍(卖家触发)
+     *
+     * @param $id
+     * @return Response
+     */
+    public function startBid($id)
+    {
+        $auction = $this->user()->auctions()->findOrFail($id);
+
+        // check auction
+        if ($auction['status'] !== Auction::STATUS_INITIAL) {
+            throw new BadRequestHttpException('The bid status is not initial');
+        }
+
+        $auction->update([
+            'status' => Auction::STATUS_BIDDING,
+        ]);
+
+        return new Response('', 200);
+    }
+
+    /**
+     * 竞拍(买家触发)
+     *
+     * @param $id
+     * @return Response
+     */
+    public function bid(Request $request, $id)
+    {
+        $request->validate([
+            'bid_price' => 'numeric',
+        ]);
+
+        $bidPrice = $request->input('bid_price');
+        $userId = $this->userId();
+        $auction = Auction::findOrFail($id);
+
+        // check auction
+        if ($auction['status'] !== Auction::STATUS_BIDDING) {
+            throw new BadRequestHttpException('The bid status is not bidding');
+        }
+
+        $auction->update([
+            'bid_user_id' => $userId,
+            'current_price' => $bidPrice,
+        ]);
+        $auction->bids()->create([
+            'user_id' => $userId,
+            'bid_price' => $bidPrice,
+            'bid_at' => now(),
+        ]);
+
+        return new Response('', 200);
+    }
+
+    /**
+     * 一口价(买家触发)
+     *
+     * @param $id
+     * @return Response
+     */
+    public function fixed($id)
+    {
+        $userId = $this->userId();
+        $auction = Auction::findOrFail($id);
+
+        // check auction
+        if ($auction['status'] !== Auction::STATUS_BIDDING) {
+            throw new BadRequestHttpException('The bid status is not bidding');
+        }
+
+        $auction->update([
+            'bid_user_id' => $userId,
+            'purchase_price' => $auction['fixed_price'],
+            'status' => Auction::STATUS_FIXED_SUCCESS,
+        ]);
 
         return new Response('', 200);
     }
