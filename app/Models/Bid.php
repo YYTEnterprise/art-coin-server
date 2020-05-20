@@ -14,6 +14,10 @@ class Bid extends Model
         'bid_at',
     ];
 
+    protected $dates = [
+        'bid_at',
+    ];
+
     public function auction()
     {
         return $this->belongsTo(Auction::class);

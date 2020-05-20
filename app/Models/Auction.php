@@ -21,6 +21,11 @@ class Auction extends Model
         'end_at',
     ];
 
+    protected $dates = [
+        'start_at',
+        'end_at',
+    ];
+
     public function product()
     {
         return $this->belongsTo(Product::class);

@@ -79,6 +79,11 @@ class User extends Authenticatable
         return $this->hasManyThrough(Auction::class, Product::class);
     }
 
+    public function orders()
+    {
+        return $this->hasMany(Order::class);
+    }
+
     // 用户参与的竞标，且用户出价最高
     public function bidAuctions()
     {
