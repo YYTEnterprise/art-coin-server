@@ -18,6 +18,7 @@ class CreateBidsTable extends Migration
             $table->unsignedBigInteger('auction_id')->comment('拍卖ID');
             $table->unsignedBigInteger('user_id')->comment('竞拍者ID');
             $table->decimal('bid_price', 10, 4)->comment('竞拍价格');
+            $table->boolean('locked')->comment('竞拍金额是否锁定');
             $table->timestamp('bid_at');
         });
     }

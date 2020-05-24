@@ -11,6 +11,7 @@ class Bid extends Model
         'auction_id',
         'user_id',
         'bid_price',
+        'locked',
         'bid_at',
     ];
 
