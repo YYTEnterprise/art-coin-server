@@ -16,6 +16,8 @@ class Auction extends Model
     protected $fillable = [
         'product_id',
         'start_price',
+        'bid_user_id',
+        'current_price',
         'step_price',
         'fixed_price',
         'status',
@@ -45,6 +47,7 @@ class Auction extends Model
 
     // 用户竞标
     public function newBid($userId, $bidAmount) {
+        $bidAmount = floatval($bidAmount);
         DB::beginTransaction();
         // 更新当前竞标价
         $this->update([
@@ -54,7 +57,7 @@ class Auction extends Model
         // 释放已竞标的的锁定金额到各个竞标者的账户
         $bids = $this->bids()->where('locked', true)->get();
         foreach ($bids as $bid) {
-            $bid->user()->wallet()->unlock($bid['lock_amount']);
+            $bid->user->wallet->unlock($bid['bid_price']);
             $bid->update([
                 'locked' => false,
             ]);
@@ -71,7 +74,7 @@ class Auction extends Model
             'locked' => true,
         ]);
         // 锁定金额
-        user::findOrFail($userId)->wallet()->lock($bidAmount);
+        user::findOrFail($userId)->wallet->lock($bidAmount);
         DB::commit();
     }
 

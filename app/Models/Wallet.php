@@ -8,8 +8,8 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 class Wallet extends Model
 {
     protected $fillable = [
-        'free_balance',
-        'lock_balance',
+        'free_amount',
+        'lock_amount',
     ];
 
     protected $hidden = [

@@ -183,6 +183,12 @@ class AuctionController extends Controller
         if ($auction['status'] !== Auction::STATUS_BIDDING) {
             throw new BadRequestHttpException('The bid status is not bidding');
         }
+        if (floatval($auction['start_price']) > floatval($bidPrice)) {
+            throw new BadRequestHttpException('The bid price can\'t be lower than start price');
+        }
+        if (floatval($auction['current_price']) + floatval($auction['step_price']) > floatval($bidPrice)) {
+            throw new BadRequestHttpException('The bid price is too low');
+        }
 
         $auction->newBid($userId, $bidPrice);
 
