@@ -10,7 +10,7 @@ class Auction extends Model
 {
     const STATUS_INITIAL = 'initial';
     const STATUS_BIDDING = 'bidding';
-    const STATUS_BID_FAIL = 'bid_fail';
+    const STATUS_BID_EXPIRED = 'bid_expired';
     const STATUS_BID_SUCCESS = 'bid_success';
     const STATUS_FIXED_SUCCESS = 'fixed_success';
 
@@ -114,7 +114,7 @@ class Auction extends Model
     // 竞标失败
     public function bidFail() {
         $this->update([
-            'status' => Auction::STATUS_BID_FAIL,
+            'status' => Auction::STATUS_BID_EXPIRED,
         ]);
     }
 
@@ -127,11 +127,11 @@ class Auction extends Model
         DB::beginTransaction();
         $expiredAuctions = self::getExpiredAuctions();
         foreach ($expiredAuctions as $auction) {
-            $bids = $auction->bids();
+            $bids = $auction->bids;
             if (count($bids) === 0) {
                 // 竞标失败
                 $auction->update([
-                    'status' => Auction::STATUS_BID_FAIL
+                    'status' => Auction::STATUS_BID_EXPIRED
                 ]);
             } else {
                 // 竞标成功
