@@ -67,4 +67,13 @@ Route::middleware(['auth:api'])->group(function () {
         Route::post('/upload', 'ImageController@upload');
         Route::delete('/{image_path}', 'ImageController@destroy');
     });
+
+    Route::prefix('orders')->group(function () {
+        Route::get('/', 'OrderController@index');
+        Route::get('/{id}', 'OrderController@show');
+        Route::post('/', 'OrderController@store');
+        Route::post('/{id}/pay', 'OrderController@pay');
+        Route::post('/{id}/shipping', 'OrderController@shipping');
+        Route::post('/{id}/confirm', 'OrderController@confirm');
+    });
 });

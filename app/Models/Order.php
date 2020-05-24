@@ -13,6 +13,7 @@ class Order extends Model
     const PAY_STATUS_REFUNDING = 'refunding';
     const PAY_STATUS_REFUNDED = 'refunded';
     const PAY_STATUS_REFUNDED_FAILED = 'refunded_failed';
+    const PAY_STATUS_COMPLETE = 'complete';
 
     protected $fillable = [
         'user_id',
