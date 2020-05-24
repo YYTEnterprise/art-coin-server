@@ -137,6 +137,10 @@ class AuctionController extends Controller
     {
         $auction = $this->user()->auctions()->findOrFail($id);
 
+        if ($auction['end_at'] <= now() ) {
+            throw new BadRequestHttpException('The bid is expired');
+        }
+
         // check auction
         if ($auction['status'] !== Auction::STATUS_INITIAL) {
             throw new BadRequestHttpException('The bid status is not initial');
@@ -165,6 +169,10 @@ class AuctionController extends Controller
         $userId = $this->userId();
         $auction = Auction::findOrFail($id);
 
+        if ($auction['end_at'] <= now() ) {
+            throw new BadRequestHttpException('The bid is expired');
+        }
+
         // check auction
         if ($auction['status'] !== Auction::STATUS_BIDDING) {
             throw new BadRequestHttpException('The bid status is not bidding');
@@ -185,6 +193,10 @@ class AuctionController extends Controller
     {
         $userId = $this->userId();
         $auction = Auction::findOrFail($id);
+
+        if ($auction['end_at'] <= now() ) {
+            throw new BadRequestHttpException('The bid is expired');
+        }
 
         // check auction
         if ($auction['status'] !== Auction::STATUS_BIDDING) {
