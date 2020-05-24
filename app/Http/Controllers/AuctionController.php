@@ -97,6 +97,8 @@ class AuctionController extends Controller
 
         $auction = $this->user()->auctions()->findOrFail($id);
 
+        // TODO 如果有正在进行的拍卖，不允许更新
+
         $auction->update($request->only([
             'start_price',
             'step_price',
@@ -116,7 +118,11 @@ class AuctionController extends Controller
      */
     public function destroy($id)
     {
-        $this->user()->auctions()->findOrFail($id)->delete();
+        $auction = $this->user()->auctions()->findOrFail($id);
+
+        // TODO 如果有正在进行的拍卖，不允许删除
+
+        $auction->delete();
 
         return new Response('', 200);
     }
@@ -164,15 +170,7 @@ class AuctionController extends Controller
             throw new BadRequestHttpException('The bid status is not bidding');
         }
 
-        $auction->update([
-            'bid_user_id' => $userId,
-            'current_price' => $bidPrice,
-        ]);
-        $auction->bids()->create([
-            'user_id' => $userId,
-            'bid_price' => $bidPrice,
-            'bid_at' => now(),
-        ]);
+        $auction->newBid($userId, $bidPrice);
 
         return new Response('', 200);
     }
@@ -193,11 +191,7 @@ class AuctionController extends Controller
             throw new BadRequestHttpException('The bid status is not bidding');
         }
 
-        $auction->update([
-            'bid_user_id' => $userId,
-            'purchase_price' => $auction['fixed_price'],
-            'status' => Auction::STATUS_FIXED_SUCCESS,
-        ]);
+        $auction->newFixed($userId, $auction['fixed_price']);
 
         return new Response('', 200);
     }

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\DB;
 
 class User extends Authenticatable
 {
@@ -93,5 +94,13 @@ class User extends Authenticatable
     public function wallet()
     {
         return $this->hasOne(Wallet::class);
+    }
+
+
+    public function transfer($toId, $amount) {
+        DB::beginTransaction();
+        $this->wallet()->withdraw($amount);
+        User::findOrFail($toId)->wallet()->deposit($amount);
+        DB::commit();
     }
 }
