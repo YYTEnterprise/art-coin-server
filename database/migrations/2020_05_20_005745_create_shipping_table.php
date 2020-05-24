@@ -28,7 +28,7 @@ class CreateShippingTable extends Migration
             $table->string('postcode');
             $table->enum('status', [
                 'pending', 'delivered', 'received'
-            ])->comment('运输状态：未发货、已发货、已收货');
+            ])->default('pending')->comment('运输状态：未发货、已发货、已收货');
             $table->timestamps();
         });
     }
