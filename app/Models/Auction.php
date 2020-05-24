@@ -51,6 +51,11 @@ class Auction extends Model
             'bid_user_id' => $userId,
             'current_price' => $bidAmount,
         ]);
+        // 释放已竞标的的锁定金额到各个竞标者的账户
+        $bids = $this->bids();
+        foreach ($bids as $bid) {
+            $bid->user()->wallet()->unlock($bid['bid_price']);
+        }
         // 新增一条竞标数据
         $this->bids()->create([
             'user_id' => $userId,
@@ -71,9 +76,15 @@ class Auction extends Model
             'purchase_price' => $fixedAmount,
             'status' => Auction::STATUS_FIXED_SUCCESS,
         ]);
+        // 释放已竞标的的锁定金额到各个竞标者的账户
+        $bids = $this->bids();
+        foreach ($bids as $bid) {
+            $bid->user()->wallet()->unlock($bid['bid_price']);
+        }
         // 锁定金额
         user::findOrFail($userId)->wallet()->lock($fixedAmount);
         // 创建订单
+
         DB::commit();
     }
 
