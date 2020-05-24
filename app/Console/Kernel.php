@@ -25,7 +25,10 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $schedule->call(Auction::handleExpiredAuctions())
+        $schedule->call(function () {
+            Auction::handleExpiredAuctions();
+        })
+            ->name('handleExpiredAuctions')
             ->everyMinute()
             ->withoutOverlapping();
     }
