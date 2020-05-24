@@ -7,6 +7,7 @@ use App\Models\Product;
 use App\Models\Shipping;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class OrderController extends Controller
@@ -45,17 +46,37 @@ class OrderController extends Controller
             'sale_way' => 'string|in:direct,auction',
         ]);
 
+        DB::beginTransaction();
         $product = Product::findOrFail($request->input('product_id'));
         $orderArray = $request->only([
             'sale_way',
         ]);
         $orderArray['total_amount'] = $product['price'];
-
         $order = $this->user()->orders()->create($orderArray);
-        $order->shipping()->create([
 
+        $shippingArray = $request->only([
+            'first_name',
+            'last_name',
+            'phone',
+            'email',
+            'company',
+            'country',
+            'province',
+            'city',
+            'street',
+            'postcode',
         ]);
-        //        $order->orderItems()->create();
+        $shippingArray['status'] = Shipping::STATUS_PENDING;
+        $order->shipping()->create($shippingArray);
+
+        $orderItemArray = [
+            'product_id' => $product['id'],
+            'price' => $product['price'],
+            'amount' => $product['price'],
+            'count' => 1,
+        ];
+        $order->orderItems()->create($orderItemArray);
+        DB::commit();
 
         return new Response('', 201);
     }
@@ -83,7 +104,16 @@ class OrderController extends Controller
      */
     public function pay($id)
     {
+        $order = $this->user()->orders()->findOrFail($id);
 
+        DB::beginTransaction();
+        $order->update([
+            'status' => Order::PAY_STATUS_PAID,
+        ]);
+        $toUserId = $order['user_id'];
+        $amount = $order['total_amount'];
+        $this->user()->wallet->transfer($toUserId, $amount);
+        DB::commit();
     }
 
     /**
@@ -101,7 +131,7 @@ class OrderController extends Controller
             'status' => Shipping::STATUS_DELIVERED
         ]);
 
-        return $order;
+        return new Response('', 200);
     }
 
     /**
@@ -114,13 +144,17 @@ class OrderController extends Controller
         // 获取订单
         $order = $this->user()->orders()->findOrFail($id);
 
-        $order->shipping()->update([
+        DB::beginTransaction();
+        // 更新物流状态
+        $order->shipping->update([
             'status' => Shipping::STATUS_RECEIVED,
         ]);
+        // 更新订单状态
         $order->update([
             'status' => Order::PAY_STATUS_COMPLETE,
         ]);
+        DB::commit();
 
-        return $order;
+        return new Response('', 200);
     }
 }

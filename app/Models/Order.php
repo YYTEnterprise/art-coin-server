@@ -11,8 +11,8 @@ class Order extends Model
     const PAY_STATUS_PAID = 'paid';
     const PAY_STATUS_PAID_FAILED = 'pay_failed';
     const PAY_STATUS_REFUNDING = 'refunding';
-    const PAY_STATUS_REFUNDED = 'refunded';
-    const PAY_STATUS_REFUNDED_FAILED = 'refunded_failed';
+    const PAY_STATUS_REFUNDED = 'refund';
+    const PAY_STATUS_REFUNDED_FAILED = 'refund_failed';
     const PAY_STATUS_COMPLETE = 'complete';
 
     protected $fillable = [

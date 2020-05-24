@@ -99,7 +99,8 @@ class User extends Authenticatable
 
     public function transfer($toId, $amount) {
         DB::beginTransaction();
-        $this->wallet()->withdraw($amount);
+        $this->wallet->unlock($amount);
+        $this->wallet->withdraw($amount);
         User::findOrFail($toId)->wallet()->deposit($amount);
         DB::commit();
     }

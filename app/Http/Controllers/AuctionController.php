@@ -48,7 +48,7 @@ class AuctionController extends Controller
         ]);
 
         $auction = Auction::where('product_id', $request->input('product_id'))
-            ->whereIn('status', [Auction::STATUS_INITIAL, Auction::STATUS_BIDDING])
+            ->where('status', Auction::STATUS_BIDDING)
             ->first();
         if($auction) {
             throw new BadRequestHttpException('Cannot create new auction, an existed auction has not finished yet');
@@ -137,6 +137,9 @@ class AuctionController extends Controller
     {
         $auction = $this->user()->auctions()->findOrFail($id);
 
+        if (strtotime($auction['start_at']) > time() ) {
+            throw new BadRequestHttpException('The bid is not start');
+        }
         if ($auction['end_at'] <= now() ) {
             throw new BadRequestHttpException('The bid is expired');
         }
@@ -162,14 +165,17 @@ class AuctionController extends Controller
     public function bid(Request $request, $id)
     {
         $request->validate([
-            'bid_price' => 'numeric',
+            'bid_price' => 'required|numeric',
         ]);
 
         $bidPrice = $request->input('bid_price');
         $userId = $this->userId();
         $auction = Auction::findOrFail($id);
 
-        if ($auction['end_at'] <= now() ) {
+        if (strtotime($auction['start_at']) > time() ) {
+            throw new BadRequestHttpException('The bid is not start');
+        }
+        if (strtotime($auction['end_at']) <= time() ) {
             throw new BadRequestHttpException('The bid is expired');
         }
 
@@ -194,7 +200,10 @@ class AuctionController extends Controller
         $userId = $this->userId();
         $auction = Auction::findOrFail($id);
 
-        if ($auction['end_at'] <= now() ) {
+        if (strtotime($auction['start_at']) > time() ) {
+            throw new BadRequestHttpException('The bid is not start');
+        }
+        if (strtotime($auction['end_at']) <= time() ) {
             throw new BadRequestHttpException('The bid is expired');
         }
 

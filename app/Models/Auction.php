@@ -8,7 +8,6 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class Auction extends Model
 {
-    const STATUS_INITIAL = 'initial';
     const STATUS_BIDDING = 'bidding';
     const STATUS_BID_EXPIRED = 'bid_expired';
     const STATUS_BID_SUCCESS = 'bid_success';
@@ -61,7 +60,7 @@ class Auction extends Model
             ]);
         }
         // 检测用户金额是否大于 $bidAmount
-        if (User::findOrFail($userId)->wallet()->free_amount < $bidAmount) {
+        if (User::findOrFail($userId)->wallet->free_amount < $bidAmount) {
             throw new BadRequestHttpException('Not enough free balance');
         }
         // 新增一条竞标数据
