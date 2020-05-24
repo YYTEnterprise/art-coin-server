@@ -22,7 +22,7 @@ class CreateAuctionsTable extends Migration
             $table->decimal('step_price', 10, 4)->comment('加价幅度');
             $table->decimal('fixed_price', 10, 4)->nullable()->comment('一口价');
             $table->decimal('purchase_price', 10, 4)->nullable()->comment('购买价格');
-            $table->enum('status', ['initial', 'bidding', 'bid_fail', 'bid_success', 'fixed_success'])->default('initial')->comment('竞拍状态：初始化、竞拍中、竞拍失败、竞拍成功、一口价成功');
+            $table->enum('status', ['initial', 'bidding', 'bid_expired', 'bid_success', 'fixed_success'])->default('initial')->comment('竞拍状态：初始化、竞拍中、竞拍失败、竞拍成功、一口价成功');
             $table->timestamp('start_at')->nullable()->comment('开始时间');
             $table->timestamp('end_at')->nullable()->comment('结束时间');
             $table->timestamps();
