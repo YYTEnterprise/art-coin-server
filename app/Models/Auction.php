@@ -76,4 +76,18 @@ class Auction extends Model
         // 创建订单
         DB::commit();
     }
+
+    // 竞标成功
+    public function bidSuccess() {
+        $this->update([
+            'status' => Auction::STATUS_BID_SUCCESS,
+        ]);
+    }
+
+    // 竞标失败
+    public function bidFail() {
+        $this->update([
+            'status' => Auction::STATUS_BID_FAIL,
+        ]);
+    }
 }
