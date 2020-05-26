@@ -13,9 +13,20 @@ class UserFollowController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function followerList()
+    public function followerList(Request $request)
     {
-        return $this->user()->followers;
+        $request->validate([
+            'page' => 'integer',
+            'per_page' => 'integer',
+        ]);
+
+        $per_page = 10;
+
+        if ($request->has('per_page')) {
+            $per_page = $request->input('per_page');
+        }
+
+        return $this->user()->followers()->paginate($per_page);
     }
 
     /**
@@ -23,9 +34,20 @@ class UserFollowController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function followingList()
+    public function followingList(Request $request)
     {
-        return $this->user()->followings;
+        $request->validate([
+            'page' => 'integer',
+            'per_page' => 'integer',
+        ]);
+
+        $per_page = 10;
+
+        if ($request->has('per_page')) {
+            $per_page = $request->input('per_page');
+        }
+
+        return $this->user()->followings()->paginate($per_page);
     }
 
     /**
