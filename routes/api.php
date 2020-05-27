@@ -69,8 +69,10 @@ Route::middleware(['auth:api'])->group(function () {
     });
 
     Route::prefix('orders')->group(function () {
-        Route::get('/', 'OrderController@index');
-        Route::get('/{id}', 'OrderController@show');
+        Route::get('/sell', 'OrderController@sellIndex');
+        Route::get('/buy', 'OrderController@buyIndex');
+        Route::get('/sell/{id}', 'OrderController@showSellOrder');
+        Route::get('/buy/{id}', 'OrderController@showBuyOrder');
         Route::post('/', 'OrderController@store');
         Route::post('/{id}/pay', 'OrderController@pay');
         Route::post('/{id}/shipping', 'OrderController@shipping');

@@ -15,7 +15,8 @@ class CreateOrdersTable extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('user_id')->index();
+            $table->unsignedBigInteger('buyer_id')->index();
+            $table->unsignedBigInteger('seller_id')->index();
             $table->enum('sale_way', ['direct', 'auction'])->default('direct')->comment('出售方式：直接出售、拍卖');
             $table->decimal('total_amount', 10, 4)->comment("订单总价");
             $table->enum('pay_method', ['art_coin'])->nullable()->comment('支付方式');

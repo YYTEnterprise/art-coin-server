@@ -12,12 +12,7 @@ use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class OrderController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index(Request $request)
+    public function buyIndex(Request $request)
     {
         $request->validate([
             'page' => 'integer',
@@ -30,7 +25,23 @@ class OrderController extends Controller
             $per_page = $request->input('per_page');
         }
 
-        return $this->user()->orders()->paginate($per_page);
+        return $this->user()->buyOrders()->paginate($per_page);
+    }
+
+    public function sellIndex(Request $request)
+    {
+        $request->validate([
+            'page' => 'integer',
+            'per_page' => 'integer',
+        ]);
+
+        $per_page = 10;
+
+        if ($request->has('per_page')) {
+            $per_page = $request->input('per_page');
+        }
+
+        return $this->user()->sellOrders()->paginate($per_page);
     }
 
     /**
@@ -64,7 +75,7 @@ class OrderController extends Controller
             'sale_way',
         ]);
         $orderArray['total_amount'] = $product['price'];
-        $order = $this->user()->orders()->create($orderArray);
+        $order = $this->user()->buyOrders()->create($orderArray);
 
         $shippingArray = $request->only([
             'first_name',
@@ -78,6 +89,7 @@ class OrderController extends Controller
             'street',
             'postcode',
         ]);
+        $shippingArray['seller_id'] = $product['user_id'];
         $shippingArray['status'] = Shipping::STATUS_PENDING;
         $order->shipping()->create($shippingArray);
 
@@ -93,38 +105,46 @@ class OrderController extends Controller
         return new Response('', 201);
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
+    public function showBuyOrder($id)
     {
         return $this->user()
-            ->orders()
-            ->with('orderItems')
-            ->with('orderPays')
-            ->with('orderRefunds')
+            ->buyOrders()
+//            ->with('orderItems')
+//            ->with('orderPays')
+//            ->with('orderRefunds')
+            ->findOrFail($id);
+    }
+
+    public function showSellOrder($id)
+    {
+        return $this->user()
+            ->sellOrders()
+//            ->with('orderItems')
+//            ->with('orderPays')
+//            ->with('orderRefunds')
             ->findOrFail($id);
     }
 
     /**
-     * 订单支付
+     * 订单支付(买家)
      *
      * @param $id
      */
     public function pay($id)
     {
-        $order = $this->user()->orders()->findOrFail($id);
-
         DB::beginTransaction();
+        $order = $this->user()->buyOrders()->findOrFail($id);
+        if($order['status'] !== Order::PAY_STATUS_PENDING) {
+            throw new BadRequestHttpException('Cannot pay for the order, the status of this order is not pending.');
+        }
+        // transfer from buyer to seller
+        $toId = $order['seller_id'];
+        $amount = $order['total_amount'];
+        $this->user()->transfer($toId, $amount);
+        // update order's status
         $order->update([
             'status' => Order::PAY_STATUS_PAID,
         ]);
-        $toUserId = $order['user_id'];
-        $amount = $order['total_amount'];
-        $this->user()->wallet->transfer($toUserId, $amount);
         DB::commit();
     }
 

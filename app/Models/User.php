@@ -80,9 +80,14 @@ class User extends Authenticatable
         return $this->hasManyThrough(Auction::class, Product::class);
     }
 
-    public function orders()
+    public function sellOrders()
     {
-        return $this->hasMany(Order::class);
+        return $this->hasMany(Order::class, 'seller_id');
+    }
+
+    public function buyOrders()
+    {
+        return $this->hasMany(Order::class, 'buyer_id');
     }
 
     // 用户参与的竞标，且用户出价最高
@@ -96,12 +101,18 @@ class User extends Authenticatable
         return $this->hasOne(Wallet::class);
     }
 
-
     public function transfer($toId, $amount) {
+        DB::beginTransaction();
+        $this->wallet->withdraw($amount);
+        User::findOrFail($toId)->wallet->deposit($amount);
+        DB::commit();
+    }
+
+    public function unlockAndTransfer($toId, $amount) {
         DB::beginTransaction();
         $this->wallet->unlock($amount);
         $this->wallet->withdraw($amount);
-        User::findOrFail($toId)->wallet()->deposit($amount);
+        User::findOrFail($toId)->wallet->deposit($amount);
         DB::commit();
     }
 }

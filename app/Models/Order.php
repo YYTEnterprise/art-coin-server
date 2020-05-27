@@ -16,7 +16,8 @@ class Order extends Model
     const PAY_STATUS_COMPLETE = 'complete';
 
     protected $fillable = [
-        'user_id',
+        'buyer_id',
+        'seller_id',
         'sale_way',
         'total_amount',
         'pay_method',
@@ -25,9 +26,14 @@ class Order extends Model
         'order_refund_id',
     ];
 
-    public function user()
+    public function buyer()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'id', 'buyer_id');
+    }
+
+    public function seller()
+    {
+        return $this->belongsTo(User::class, 'id', 'seller_id');
     }
 
     public function items()
