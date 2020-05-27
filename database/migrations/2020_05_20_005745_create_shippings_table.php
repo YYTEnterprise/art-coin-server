@@ -13,7 +13,7 @@ class CreateShippingTable extends Migration
      */
     public function up()
     {
-        Schema::create('shipping', function (Blueprint $table) {
+        Schema::create('shippings', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('order_id');
             $table->string('first_name');
@@ -40,6 +40,6 @@ class CreateShippingTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('shipping');
+        Schema::dropIfExists('shippings');
     }
 }

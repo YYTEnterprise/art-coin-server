@@ -13,7 +13,7 @@ class CreateOrderPayTable extends Migration
      */
     public function up()
     {
-        Schema::create('order_pay', function (Blueprint $table) {
+        Schema::create('order_pays', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('order_id');
             $table->string("origin_tx_no")->unique()->comment('原始单号（区块链交易号）');
@@ -30,6 +30,6 @@ class CreateOrderPayTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('order_pay');
+        Schema::dropIfExists('order_pays');
     }
 }

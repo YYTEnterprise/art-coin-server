@@ -13,7 +13,7 @@ class CreateOrderRefundTable extends Migration
      */
     public function up()
     {
-        Schema::create('order_refund', function (Blueprint $table) {
+        Schema::create('order_refunds', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('order_id');
             $table->string("origin_tx_no")->unique()->comment('原始单号（区块链交易号）');
@@ -30,6 +30,6 @@ class CreateOrderRefundTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('order_refund');
+        Schema::dropIfExists('order_refunds');
     }
 }

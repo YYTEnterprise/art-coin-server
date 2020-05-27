@@ -42,14 +42,23 @@ class OrderController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'product_id' => 'integer|exists:products,id',
-            'sale_way' => 'string|in:direct,auction',
+            'product_id' => 'required|integer|exists:products,id',
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'phone' => 'required|string|max:255',
+            'email' => 'required|email',
+            'company' => 'required|string|max:255',
+            'country' => 'required|string|max:255',
+            'province' => 'required|string|max:255',
+            'city' => 'required|string|max:255',
+            'street' => 'required|string|max:255',
+            'postcode' => 'required|string|max:255',
         ]);
 
         DB::beginTransaction();
         $product = Product::findOrFail($request->input('product_id'));
         if($product['sale_way'] !== Product::SALE_WAY_DIRECT) {
-            throw new BadRequestHttpException('Cannot create new auction, the sale way of product is not direct');
+            throw new BadRequestHttpException('Cannot create new order, the sale way of product is not direct');
         }
         $orderArray = $request->only([
             'sale_way',
@@ -78,7 +87,7 @@ class OrderController extends Controller
             'amount' => $product['price'],
             'count' => 1,
         ];
-        $order->orderItems()->create($orderItemArray);
+        $order->items()->create($orderItemArray);
         DB::commit();
 
         return new Response('', 201);
