@@ -138,9 +138,10 @@ class OrderController extends Controller
             throw new BadRequestHttpException('Cannot pay for the order, the status of this order is not pending.');
         }
         // transfer from buyer to seller
-        $toId = $order['seller_id'];
+//        $toId = $order['seller_id'];
         $amount = $order['total_amount'];
-        $this->user()->transfer($toId, $amount);
+        $this->user()->waller()->lock($amount);
+//        $this->user()->transfer($toId, $amount);
         // update order's status
         $order->update([
             'status' => Order::PAY_STATUS_PAID,
@@ -156,12 +157,15 @@ class OrderController extends Controller
      */
     public function shipping(Request $request, $id)
     {
-        // 获取订单
-        $order = Order::findOrFail($id);
-
+        DB::beginTransaction();
+        $order = $this->user()->sellOrders()->findOrFail($id);
+        if($order['status'] !== Order::PAY_STATUS_PAID) {
+            throw new BadRequestHttpException('Cannot shipping for the order, the status of this order is not paid.');
+        }
         $order->shipping()->update([
             'status' => Shipping::STATUS_DELIVERED
         ]);
+        DB::commit();
 
         return new Response('', 200);
     }
@@ -173,10 +177,13 @@ class OrderController extends Controller
      */
     public function confirm($id)
     {
-        // 获取订单
-        $order = $this->user()->orders()->findOrFail($id);
-
         DB::beginTransaction();
+        // 获取订单
+        $order = $this->user()->buyOrders()->findOrFail($id);
+        // 转账
+        $toId = $order['seller_id'];
+        $amount = $order['total_amount'];
+        $this->user()->unlockAndTransfer($toId, $amount);
         // 更新物流状态
         $order->shipping->update([
             'status' => Shipping::STATUS_RECEIVED,

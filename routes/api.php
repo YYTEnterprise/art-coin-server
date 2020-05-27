@@ -69,13 +69,13 @@ Route::middleware(['auth:api'])->group(function () {
     });
 
     Route::prefix('orders')->group(function () {
-        Route::get('/sell', 'OrderController@sellIndex');
-        Route::get('/buy', 'OrderController@buyIndex');
-        Route::get('/sell/{id}', 'OrderController@showSellOrder');
-        Route::get('/buy/{id}', 'OrderController@showBuyOrder');
-        Route::post('/', 'OrderController@store');
-        Route::post('/{id}/pay', 'OrderController@pay');
-        Route::post('/{id}/shipping', 'OrderController@shipping');
-        Route::post('/{id}/confirm', 'OrderController@confirm');
+        Route::get('/seller', 'OrderController@sellIndex');
+        Route::get('/buyer', 'OrderController@buyIndex');
+        Route::get('/seller/{id}', 'OrderController@showSellOrder');
+        Route::get('/buyer/{id}', 'OrderController@showBuyOrder');
+        Route::post('/buyer', 'OrderController@store');
+        Route::post('/buyer/{id}/pay', 'OrderController@pay');
+        Route::post('/seller/{id}/shipping', 'OrderController@shipping');
+        Route::post('/buyer/{id}/confirm', 'OrderController@confirm');
     });
 });
