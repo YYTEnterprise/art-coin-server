@@ -98,8 +98,6 @@ class ProductController extends Controller
             'has_deliver_fee' => 'required_if:deliver_type,express|boolean',
             'has_tariff' => 'required_if:deliver_type,express|boolean',
             'deliver_remark' => 'required_if:deliver_type,email|string',
-            'on_sale' => 'boolean',
-            'sale_way' => 'string|in:direct,auction',
         ]);
 
         $product = $this->user()->products()->findOrFail($id);
@@ -114,8 +112,6 @@ class ProductController extends Controller
             'has_deliver_fee',
             'has_tariff',
             'deliver_remark',
-            'on_sale',
-            'sale_way',
         ]));
 
         return $product;

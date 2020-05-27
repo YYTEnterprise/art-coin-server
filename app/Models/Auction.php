@@ -90,17 +90,17 @@ class Auction extends Model
         // 释放已竞标的的锁定金额到各个竞标者的账户
         $bids = $this->bids()->where('locked', true)->get();
         foreach ($bids as $bid) {
-            $bid->user()->wallet()->unlock($bid['lock_amount']);
+            $bid->user->wallet->unlock($bid['lock_amount']);
             $bid->update([
                 'locked' => false,
             ]);
         }
         // 检测用户金额是否大于 $fixedAmount
-        if (User::findOrFail($userId)->wallet()->free_amount < $fixedAmount) {
+        if (User::findOrFail($userId)->wallet->free_amount < $fixedAmount) {
             throw new BadRequestHttpException('Not enough free balance');
         }
         // 锁定金额
-        user::findOrFail($userId)->wallet()->lock($fixedAmount);
+        user::findOrFail($userId)->wallet->lock($fixedAmount);
         // TODO 创建订单
 
         DB::commit();

@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
+    const SALE_WAY_DIRECT = 'direct';
+    const SALE_WAY_AUCTION = 'auction';
+
     protected $fillable = [
         'user_id',
         'title',

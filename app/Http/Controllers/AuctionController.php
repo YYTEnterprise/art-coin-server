@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Auction;
+use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -46,6 +47,11 @@ class AuctionController extends Controller
             'start_at' => 'required|date',
             'end_at' => 'required|date',
         ]);
+
+        $product = Product::findOrFail($request->input('product_id'));
+        if($product['sale_way'] !== Product::SALE_WAY_AUCTION) {
+            throw new BadRequestHttpException('Cannot create new auction, the sale way of product is not auction');
+        }
 
         $auction = Auction::where('product_id', $request->input('product_id'))
             ->where('status', Auction::STATUS_BIDDING)

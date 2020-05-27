@@ -48,6 +48,9 @@ class OrderController extends Controller
 
         DB::beginTransaction();
         $product = Product::findOrFail($request->input('product_id'));
+        if($product['sale_way'] !== Product::SALE_WAY_DIRECT) {
+            throw new BadRequestHttpException('Cannot create new auction, the sale way of product is not direct');
+        }
         $orderArray = $request->only([
             'sale_way',
         ]);
