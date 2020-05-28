@@ -26,7 +26,11 @@ class ProductController extends Controller
             $per_page = $request->input('per_page');
         }
 
-        return $this->user()->products()->withCount('likes')->paginate($per_page);
+        return $this->user()
+            ->products()
+            ->withCount('likes')
+            ->with('auction')
+            ->paginate($per_page);
     }
 
     /**
@@ -76,7 +80,11 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-        return $this->user()->products()->withCount('likes')->findOrFail($id);
+        return $this->user()
+            ->products()
+            ->withCount('likes')
+            ->with('auction')
+            ->findOrFail($id);
     }
 
     /**

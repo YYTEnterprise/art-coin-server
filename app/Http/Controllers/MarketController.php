@@ -25,7 +25,10 @@ class MarketController extends Controller
             $per_page = $request->input('per_page');
         }
 
-        return Product::where('on_sale', true)->withCount('likes')->paginate($per_page);
+        return Product::where('on_sale', true)
+            ->withCount('likes')
+            ->with('auction')
+            ->paginate($per_page);
     }
 
     /**
@@ -36,6 +39,9 @@ class MarketController extends Controller
      */
     public function show($id)
     {
-        return Product::where('on_sale', true)->withCount('likes')->findOrFail($id);
+        return Product::where('on_sale', true)
+            ->withCount('likes')
+            ->with('auction')
+            ->findOrFail($id);
     }
 }
