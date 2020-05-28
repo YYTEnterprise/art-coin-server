@@ -75,6 +75,7 @@ class OrderController extends Controller
             'sale_way',
         ]);
         $orderArray['total_amount'] = $product['price'];
+        $orderArray['seller_id'] = $product['user_id'];
         $order = $this->user()->buyOrders()->create($orderArray);
 
         $shippingArray = $request->only([
@@ -137,11 +138,9 @@ class OrderController extends Controller
         if($order['status'] !== Order::PAY_STATUS_PENDING) {
             throw new BadRequestHttpException('Cannot pay for the order, the status of this order is not pending.');
         }
-        // transfer from buyer to seller
-//        $toId = $order['seller_id'];
+        // lock amount from buyer
         $amount = $order['total_amount'];
-        $this->user()->waller()->lock($amount);
-//        $this->user()->transfer($toId, $amount);
+        $this->user()->wallet->lock($amount);
         // update order's status
         $order->update([
             'status' => Order::PAY_STATUS_PAID,
@@ -162,6 +161,9 @@ class OrderController extends Controller
         if($order['status'] !== Order::PAY_STATUS_PAID) {
             throw new BadRequestHttpException('Cannot shipping for the order, the status of this order is not paid.');
         }
+        if($order->shipping['status'] !== Shipping::STATUS_PENDING) {
+            throw new BadRequestHttpException('Cannot shipping for the order, the status of this shipping is not pending.');
+        }
         $order->shipping()->update([
             'status' => Shipping::STATUS_DELIVERED
         ]);
@@ -180,6 +182,12 @@ class OrderController extends Controller
         DB::beginTransaction();
         // 获取订单
         $order = $this->user()->buyOrders()->findOrFail($id);
+        if($order['status'] !== Order::PAY_STATUS_PAID) {
+            throw new BadRequestHttpException('Cannot confirm for the order, the status of this order is not paid.');
+        }
+        if($order->shipping['status'] !== Shipping::STATUS_DELIVERED) {
+            throw new BadRequestHttpException('Cannot confirm for the order, the status of this shipping is not delivered.');
+        }
         // 转账
         $toId = $order['seller_id'];
         $amount = $order['total_amount'];
