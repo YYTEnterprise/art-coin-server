@@ -25,7 +25,6 @@ class CreateOrdersTable extends Migration
             )->default('pending')->comment('订单状态：未支付、支付中、已支付、支付失败、退款中、已退款、退款失败, 订单完成');
             $table->unsignedBigInteger('order_pay_id')->nullable();
             $table->unsignedBigInteger('order_refund_id')->nullable();
-            $table->unsignedBigInteger('shipping_id')->nullable();
             $table->timestamps();
         });
     }

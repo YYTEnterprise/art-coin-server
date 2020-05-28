@@ -71,11 +71,12 @@ class OrderController extends Controller
         if($product['sale_way'] !== Product::SALE_WAY_DIRECT) {
             throw new BadRequestHttpException('Cannot create new order, the sale way of product is not direct');
         }
-        $orderArray = $request->only([
-            'sale_way',
-        ]);
-        $orderArray['total_amount'] = $product['price'];
-        $orderArray['seller_id'] = $product['user_id'];
+        $orderArray = [
+            'sale_way' => $product['sale_way'],
+            'total_amount' => $product['price'],
+            'seller_id' => $product['user_id'],
+            'pay_method' => Order::PAY_METHOD_ART_COIN,
+        ];
         $order = $this->user()->buyOrders()->create($orderArray);
 
         $shippingArray = $request->only([
@@ -110,9 +111,10 @@ class OrderController extends Controller
     {
         return $this->user()
             ->buyOrders()
-//            ->with('orderItems')
-//            ->with('orderPays')
-//            ->with('orderRefunds')
+            ->with('items')
+            ->with('shipping')
+            ->with('pays')
+            ->with('refunds')
             ->findOrFail($id);
     }
 
@@ -120,9 +122,10 @@ class OrderController extends Controller
     {
         return $this->user()
             ->sellOrders()
-//            ->with('orderItems')
-//            ->with('orderPays')
-//            ->with('orderRefunds')
+            ->with('items')
+            ->with('shipping')
+            ->with('pays')
+            ->with('refunds')
             ->findOrFail($id);
     }
 

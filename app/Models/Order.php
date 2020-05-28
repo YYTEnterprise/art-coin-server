@@ -15,6 +15,8 @@ class Order extends Model
     const PAY_STATUS_REFUNDED_FAILED = 'refund_failed';
     const PAY_STATUS_COMPLETE = 'complete';
 
+    const PAY_METHOD_ART_COIN = 'art_coin';
+
     protected $fillable = [
         'buyer_id',
         'seller_id',
@@ -45,12 +47,12 @@ class Order extends Model
         return $this->hasOne(Shipping::class);
     }
 
-    public function orderPays()
+    public function pays()
     {
         return $this->hasMany(OrderPay::class);
     }
 
-    public function orderRefunds()
+    public function refunds()
     {
         return $this->hasMany(OrderRefund::class);
     }
