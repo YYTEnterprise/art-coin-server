@@ -34,7 +34,7 @@ Route::middleware(['auth:api'])->group(function () {
         Route::get('/{id}', 'AuctionController@show');
         Route::post('/', 'AuctionController@store');
         Route::put('/{id}', 'AuctionController@update');
-        Route::delete('/{id}', 'AuctionController@destroy');
+//        Route::delete('/{id}', 'AuctionController@destroy');
 //        Route::post('/{id}/start', 'AuctionController@startBid');
         Route::post('/{id}/bid', 'AuctionController@bid');
         Route::post('/{id}/fixed', 'AuctionController@fixed');
