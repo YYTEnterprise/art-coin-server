@@ -50,7 +50,7 @@ class ProductController extends Controller
             'deliver_type' => 'required|string|in:express,email',
             'has_deliver_fee' => 'required_if:deliver_type,express|boolean',
             'has_tariff' => 'required_if:deliver_type,express|boolean',
-            'deliver_remark' => 'required_if:deliver_type,email|string',
+//            'deliver_remark' => 'required_if:deliver_type,email|string',
             'on_sale' => 'boolean',
             'sale_way' => 'required|string|in:direct,auction',
         ]);
@@ -64,7 +64,7 @@ class ProductController extends Controller
             'deliver_type',
             'has_deliver_fee',
             'has_tariff',
-            'deliver_remark',
+//            'deliver_remark',
             'on_sale',
             'sale_way',
         ]));

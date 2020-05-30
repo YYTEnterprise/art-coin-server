@@ -102,6 +102,21 @@ class UserController extends Controller
         return $user;
     }
 
+    public function setPayPassword(Request $request)
+    {
+        $request->validate([
+            'password' => 'required|string|min:6',
+//            'password_confirmation' => 'required|confirmed|string|min:6',
+        ]);
+
+        $user = $this->user();
+        $user->update([
+            'pay_passwd' => Hash::make($request->input('password')),
+        ]);
+
+        return $user;
+    }
+
     /**
      * Attempt to log the user into the application.
      *

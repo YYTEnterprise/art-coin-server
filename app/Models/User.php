@@ -22,6 +22,7 @@ class User extends Authenticatable
         'nickname',
         'avatar_url',
         'cover_image_url',
+        'pay_passwd',
     ];
 
     /**
@@ -30,7 +31,12 @@ class User extends Authenticatable
      * @var array
      */
     protected $hidden = [
-        'password', 'remember_token', 'email_verified_at', 'api_token', 'pivot'
+        'password',
+        'remember_token',
+        'email_verified_at',
+        'api_token',
+        'pay_passwd',
+        'pivot',
     ];
 
     /**
