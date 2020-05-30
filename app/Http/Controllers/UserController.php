@@ -117,14 +117,57 @@ class UserController extends Controller
         return $user;
     }
 
-    public function info()
+    public function myInfo()
     {
-        $user = User::withCount('products')
+        return User::withCount('products')
             ->withCount('followers')
             ->with('wallet')
             ->findOrFail($this->userId());
+    }
 
-        return $user;
+    public function userInfo($id)
+    {
+        return User::findOrFail($id);
+    }
+
+    public function productList(Request $request, $id)
+    {
+        $request->validate([
+            'page' => 'integer',
+            'per_page' => 'integer',
+        ]);
+
+        $per_page = 10;
+
+        if ($request->has('per_page')) {
+            $per_page = $request->input('per_page');
+        }
+
+        $user = User::findOrFail($id);
+
+        return $user()
+            ->products()
+            ->withCount('likes')
+            ->with('auction')
+            ->paginate($per_page);
+    }
+
+    public function followingsList(Request $request, $id)
+    {
+        $request->validate([
+            'page' => 'integer',
+            'per_page' => 'integer',
+        ]);
+
+        $per_page = 10;
+
+        if ($request->has('per_page')) {
+            $per_page = $request->input('per_page');
+        }
+
+        $user = User::findOrFail($id);
+
+        return $user->followings()->paginate($per_page);
     }
 
     /**

@@ -24,6 +24,12 @@ Route::middleware(['api'])->group(function () {
         Route::get('/{id}', 'MarketController@show');
     });
 
+    Route::prefix('users')->group(function () {
+        Route::get('/{id}/info', 'UserController@userInfo');
+        Route::get('/{id}/products', 'UserController@productList');
+        Route::get('/{id}/followings', 'UserController@followingsList');
+    });
+
     Route::post('/products/{id}/likes', 'UserProductLikeController@likeList');
 });
 
@@ -55,7 +61,7 @@ Route::middleware(['auth:api'])->group(function () {
     });
 
     Route::prefix('users')->group(function () {
-        Route::get('/info', 'UserController@info');
+        Route::get('/info', 'UserController@myInfo');
         Route::post('/settings', 'UserController@updateSettings');
         Route::post('/pay/password', 'UserController@setPayPassword');
 
