@@ -40,7 +40,7 @@ class UserController extends Controller
         Validator::make($data, [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'password' => ['required', 'string', 'min:8'],
+            'password' => ['required', 'string'],
         ])->validate();
 
         $user = User::create([
@@ -105,7 +105,7 @@ class UserController extends Controller
     public function setPayPassword(Request $request)
     {
         $request->validate([
-            'password' => 'required|string|min:6',
+            'password' => 'required|string',
 //            'password_confirmation' => 'required|confirmed|string|min:6',
         ]);
 
@@ -113,6 +113,16 @@ class UserController extends Controller
         $user->update([
             'pay_passwd' => Hash::make($request->input('password')),
         ]);
+
+        return $user;
+    }
+
+    public function info()
+    {
+        $user = $this->user()->withCount('products')
+            ->withCount('followers')
+            ->with('wallet')
+            ->get();
 
         return $user;
     }

@@ -55,6 +55,7 @@ Route::middleware(['auth:api'])->group(function () {
     });
 
     Route::prefix('users')->group(function () {
+        Route::get('/info', 'UserController@info');
         Route::post('/settings', 'UserController@updateSettings');
         Route::post('/pay/password', 'UserController@setPayPassword');
 

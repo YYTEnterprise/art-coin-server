@@ -8,6 +8,7 @@ use App\Models\Shipping;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class OrderController extends Controller
@@ -134,16 +135,26 @@ class OrderController extends Controller
      *
      * @param $id
      */
-    public function pay($id)
+    public function pay(Request $request, $id)
     {
+        $request->validate([
+            'password' => 'string',
+        ]);
+        $user = $this->user();
+
         DB::beginTransaction();
-        $order = $this->user()->buyOrders()->findOrFail($id);
+        if (!empty($user->pay_passwd)) {
+            if(!Hash::check($user->passwd, $request->input('password'))) {
+                throw new BadRequestHttpException('The payment password is not correct.');
+            }
+        }
+        $order = $user->buyOrders()->findOrFail($id);
         if($order['status'] !== Order::PAY_STATUS_PENDING) {
             throw new BadRequestHttpException('Cannot pay for the order, the status of this order is not pending.');
         }
         // lock amount from buyer
         $amount = $order['total_amount'];
-        $this->user()->wallet->lock($amount);
+        $user->wallet->lock($amount);
         // update order's status
         $order->update([
             'status' => Order::PAY_STATUS_PAID,
