@@ -119,10 +119,10 @@ class UserController extends Controller
 
     public function info()
     {
-        $user = $this->user()->withCount('products')
+        $user = User::withCount('products')
             ->withCount('followers')
             ->with('wallet')
-            ->get();
+            ->findOrFail($this->userId());
 
         return $user;
     }
