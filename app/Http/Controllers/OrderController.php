@@ -141,10 +141,11 @@ class OrderController extends Controller
             'password' => 'string',
         ]);
         $user = $this->user();
+        $password = $request->input('password');
 
         DB::beginTransaction();
         if (!empty($user->pay_passwd)) {
-            if(!Hash::check($user->passwd, $request->input('password'))) {
+            if(!Hash::check($password, $user->pay_passwd)) {
                 throw new BadRequestHttpException('The payment password is not correct.');
             }
         }
