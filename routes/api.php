@@ -27,6 +27,7 @@ Route::middleware(['api'])->group(function () {
     Route::prefix('users')->group(function () {
         Route::get('/{id}/info', 'UserController@userInfo');
         Route::get('/{id}/products', 'UserController@productList');
+        Route::get('/{user_id}/products/{product_id}', 'UserController@productDetails');
         Route::get('/{id}/followings', 'UserController@followingsList');
     });
 

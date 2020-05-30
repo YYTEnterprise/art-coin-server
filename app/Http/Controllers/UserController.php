@@ -152,6 +152,17 @@ class UserController extends Controller
             ->paginate($per_page);
     }
 
+    public function productDetails($user_id, $product_id)
+    {
+        $user = User::findOrFail($user_id);
+
+        return $user
+            ->products()
+            ->withCount('likes')
+            ->with('auction')
+            ->findOrFail($product_id);
+    }
+
     public function followingsList(Request $request, $id)
     {
         $request->validate([
