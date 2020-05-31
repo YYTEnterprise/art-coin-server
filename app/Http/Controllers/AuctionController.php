@@ -103,7 +103,10 @@ class AuctionController extends Controller
 
         $auction = $this->user()->auctions()->findOrFail($id);
 
-        // TODO 如果有正在进行的拍卖，不允许更新
+        // 如果有正在进行的拍卖，不允许更新
+        if (strtotime($auction['start_at']) <= time() ) {
+            throw new BadRequestHttpException('The bid is start');
+        }
 
         $auction->update($request->only([
             'start_price',
@@ -126,7 +129,10 @@ class AuctionController extends Controller
     {
         $auction = $this->user()->auctions()->findOrFail($id);
 
-        // TODO 如果有正在进行的拍卖，不允许删除
+        // 如果有正在进行的拍卖，不允许删除
+        if (strtotime($auction['start_at']) <= time() ) {
+            throw new BadRequestHttpException('The bid is start');
+        }
 
         $auction->delete();
 
