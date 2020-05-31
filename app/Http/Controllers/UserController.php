@@ -145,7 +145,7 @@ class UserController extends Controller
 
         $user = User::findOrFail($id);
 
-        return $user()
+        return $user
             ->products()
             ->withCount('likes')
             ->with('auction')
