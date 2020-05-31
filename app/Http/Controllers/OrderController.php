@@ -67,19 +67,10 @@ class OrderController extends Controller
             'postcode' => 'required|string|max:255',
         ]);
 
-        DB::beginTransaction();
         $product = Product::findOrFail($request->input('product_id'));
         if($product['sale_way'] !== Product::SALE_WAY_DIRECT) {
             throw new BadRequestHttpException('Cannot create new order, the sale way of product is not direct');
         }
-        $orderArray = [
-            'sale_way' => $product['sale_way'],
-            'total_amount' => $product['price'],
-            'seller_id' => $product['user_id'],
-            'pay_method' => Order::PAY_METHOD_ART_COIN,
-        ];
-        $order = $this->user()->buyOrders()->create($orderArray);
-
         $shippingArray = $request->only([
             'first_name',
             'last_name',
@@ -92,18 +83,7 @@ class OrderController extends Controller
             'street',
             'postcode',
         ]);
-        $shippingArray['seller_id'] = $product['user_id'];
-        $shippingArray['status'] = Shipping::STATUS_PENDING;
-        $order->shipping()->create($shippingArray);
-
-        $orderItemArray = [
-            'product_id' => $product['id'],
-            'price' => $product['price'],
-            'amount' => $product['price'],
-            'count' => 1,
-        ];
-        $order->items()->create($orderItemArray);
-        DB::commit();
+        Order::new($this->user(), $product, $product['price'], $shippingArray);
 
         return new Response('', 201);
     }

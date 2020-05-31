@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class Order extends Model
 {
@@ -55,5 +56,30 @@ class Order extends Model
     public function refunds()
     {
         return $this->hasMany(OrderRefund::class);
+    }
+
+    public static function new($user, $product, $amount, $shippingArray = [])
+    {
+        DB::beginTransaction();
+        $orderArray = [
+            'sale_way' => $product['sale_way'],
+            'total_amount' => $amount,
+            'seller_id' => $product['user_id'],
+            'pay_method' => Order::PAY_METHOD_ART_COIN,
+        ];
+        $order = $user->buyOrders()->create($orderArray);
+
+        $shippingArray['seller_id'] = $product['user_id'];
+        $shippingArray['status'] = Shipping::STATUS_PENDING;
+        $order->shipping()->create($shippingArray);
+
+        $orderItemArray = [
+            'product_id' => $product['id'],
+            'price' => $product['price'],
+            'amount' => $amount,
+            'count' => 1,
+        ];
+        $order->items()->create($orderItemArray);
+        DB::commit();
     }
 }

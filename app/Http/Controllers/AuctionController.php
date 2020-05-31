@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use App\Models\Auction;
+use App\Models\Order;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\DB;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class AuctionController extends Controller
@@ -215,6 +217,8 @@ class AuctionController extends Controller
      */
     public function fixed($id)
     {
+        DB::beginTransaction();
+
         $userId = $this->userId();
         $auction = Auction::findOrFail($id);
 
@@ -229,8 +233,14 @@ class AuctionController extends Controller
         if ($auction['status'] !== Auction::STATUS_BIDDING) {
             throw new BadRequestHttpException('The bid status is not bidding');
         }
-
         $auction->newFixed($userId, $auction['fixed_price']);
+
+        // 创建订单
+        $product = Product::findOrFail($auction['product_id']);
+        $amount = $auction['fixed_price'];
+        Order::new($this->user(), $product, $amount);
+
+        DB::commit();
 
         return new Response('', 200);
     }

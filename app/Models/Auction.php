@@ -101,7 +101,6 @@ class Auction extends Model
         }
         // 锁定金额
         user::findOrFail($userId)->wallet->lock($fixedAmount);
-        // TODO 创建订单
 
         DB::commit();
     }
@@ -141,7 +140,11 @@ class Auction extends Model
                     'purchase_price' => $auction['current_price'],
                     'status' => Auction::STATUS_BID_SUCCESS,
                 ]);
-                // TODO 创建订单
+                // 创建订单
+                $user = $auction->currentBidUser;
+                $product = $auction->product;
+                $amount = $auction['current_price'];
+                Order::new($user, $product, $amount);
             }
         }
         DB::commit();
