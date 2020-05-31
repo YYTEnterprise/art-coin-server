@@ -16,16 +16,16 @@ class CreateShippingsTable extends Migration
         Schema::create('shippings', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('order_id');
-            $table->string('first_name');
-            $table->string('last_name');
-            $table->string('phone');
-            $table->string('email');
+            $table->string('first_name')->nullable();
+            $table->string('last_name')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('email')->nullable();
             $table->string('company')->nullable();
-            $table->string('country');
-            $table->string('province');
-            $table->string('city');
-            $table->string('street');
-            $table->string('postcode');
+            $table->string('country')->nullable();
+            $table->string('province')->nullable();
+            $table->string('city')->nullable();
+            $table->string('street')->nullable();
+            $table->string('postcode')->nullable();
             $table->enum('status', [
                 'pending', 'delivered', 'received'
             ])->default('pending')->comment('运输状态：未发货、已发货、已收货');
