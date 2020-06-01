@@ -22,6 +22,7 @@ class User extends Authenticatable
         'nickname',
         'avatar_url',
         'cover_image_url',
+        'country',
         'pay_passwd',
     ];
 

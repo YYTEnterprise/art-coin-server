@@ -89,6 +89,7 @@ class UserController extends Controller
             'nickname' => 'string|max:20',
             'avatar_url' => 'string|max:255',
             'cover_image_url' => 'string|max:255',
+            'country' => 'string|max:255',
         ]);
 
         $userId = $this->userId();
@@ -97,6 +98,7 @@ class UserController extends Controller
             'nickname',
             'avatar_url',
             'cover_image_url',
+            'country',
         ]));
 
         return $user;

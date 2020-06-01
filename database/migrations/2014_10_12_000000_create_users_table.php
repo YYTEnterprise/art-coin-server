@@ -19,6 +19,7 @@ class CreateUsersTable extends Migration
             $table->string('nickname')->nullable()->comment('昵称');
             $table->string('avatar_url')->nullable()->comment('头像');
             $table->string('cover_image_url')->nullable()->comment('封面图片');
+            $table->string('country')->nullable()->comment('国家');
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
