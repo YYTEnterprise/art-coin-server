@@ -30,6 +30,10 @@ class Product extends Model
         'on_sale' => 'boolean',
     ];
 
+    protected $hidden = [
+        'pivot',
+    ];
+
     // 对产品点赞的用户
     public function likes()
     {
@@ -38,7 +42,7 @@ class Product extends Model
             'user_product_likes',
             'product_id',
             'user_id'
-        )->withTimestamps();
+        );
     }
 
     public function user()

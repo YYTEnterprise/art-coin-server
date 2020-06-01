@@ -108,6 +108,26 @@ class User extends Authenticatable
         return $this->hasOne(Wallet::class);
     }
 
+    // 用户点赞过的物品
+    public function likes()
+    {
+        return $this->belongsToMany(
+            Product::class,
+            'user_product_likes',
+            'user_id',
+            'product_id',
+        );
+    }
+
+    // 用户是否对物品点赞
+    public function isLikedProduct($product_id) {
+        $userId = $this->userId();
+        return !empty(UserProductLike::where('user_id', $userId)
+            ->where(product_id, $product_id)
+            ->find()
+        );
+    }
+
     public function transfer($toId, $amount) {
         DB::beginTransaction();
         $this->wallet->withdraw($amount);

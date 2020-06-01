@@ -29,6 +29,7 @@ Route::middleware(['api'])->group(function () {
         Route::get('/{id}/products', 'UserController@productList');
         Route::get('/{user_id}/products/{product_id}', 'UserController@productDetails');
         Route::get('/{id}/followings', 'UserController@followingsList');
+        Route::get('/{id}/likes', 'UserController@likeProducts');
     });
 
     Route::post('/products/{id}/likes', 'UserProductLikeController@likeList');
@@ -70,6 +71,7 @@ Route::middleware(['auth:api'])->group(function () {
         Route::post('/unfollow', 'UserFollowController@unfollow');
         Route::get('/followers', 'UserFollowController@followerList');
         Route::get('/followings', 'UserFollowController@followingLIst');
+        Route::get('/likes', 'UserController@myLikeProducts');
     });
 
     Route::prefix('images')->group(function () {

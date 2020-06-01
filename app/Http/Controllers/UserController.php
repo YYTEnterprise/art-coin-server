@@ -185,6 +185,17 @@ class UserController extends Controller
         return $user->followings()->paginate($per_page);
     }
 
+    public function likeProducts($id)
+    {
+        $user = User::findOrFail($id);
+        return $user->likes;
+    }
+
+    public function myLikeProducts()
+    {
+        return $this->user()->likes;
+    }
+
     /**
      * Attempt to log the user into the application.
      *
