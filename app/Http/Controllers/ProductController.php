@@ -84,6 +84,7 @@ class ProductController extends Controller
             ->products()
             ->withCount('likes')
             ->with('auction')
+            ->with('user')
             ->findOrFail($id);
     }
 

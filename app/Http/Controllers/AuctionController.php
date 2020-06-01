@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Auction;
 use App\Models\Order;
 use App\Models\Product;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
@@ -82,8 +83,16 @@ class AuctionController extends Controller
      */
     public function show($id)
     {
-        return $this->user()->auctions()->findOrFail($id);
+        $auction = $this->user()
+            ->auctions()
+            ->with('product')
+            ->findOrFail($id);
 
+        $sellerId = $auction['product']['user_id'];
+        $seller = User::find($sellerId);
+        $auction['seller'] = $seller;
+
+        return $auction;
     }
 
     /**

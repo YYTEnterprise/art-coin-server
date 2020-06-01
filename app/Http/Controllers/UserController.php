@@ -127,7 +127,9 @@ class UserController extends Controller
 
     public function userInfo($id)
     {
-        return User::findOrFail($id);
+        return User::withCount('products')
+            ->withCount('followers')
+            ->findOrFail($id);
     }
 
     public function productList(Request $request, $id)
