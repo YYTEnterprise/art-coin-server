@@ -121,11 +121,14 @@ class User extends Authenticatable
 
     // 用户是否对物品点赞
     public function isLikedProduct($product_id) {
-        $userId = $this->userId();
-        return !empty(UserProductLike::where('user_id', $userId)
-            ->where(product_id, $product_id)
-            ->find()
-        );
+        $userId = $this->id;
+        $isLike =
+            UserProductLike::where('user_id', $userId)
+                ->where('product_id', $product_id)
+                ->get()->isNotEmpty();
+        return [
+            'is_like' => $isLike,
+        ];
     }
 
     public function transfer($toId, $amount) {

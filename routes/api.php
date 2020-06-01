@@ -72,6 +72,7 @@ Route::middleware(['auth:api'])->group(function () {
         Route::get('/followers', 'UserFollowController@followerList');
         Route::get('/followings', 'UserFollowController@followingLIst');
         Route::get('/likes', 'UserController@myLikeProducts');
+        Route::get('/products/{product_id}/is_like', 'UserController@isLikedProduct');
     });
 
     Route::prefix('images')->group(function () {
