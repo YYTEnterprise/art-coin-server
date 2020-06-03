@@ -201,6 +201,11 @@ class UserController extends Controller
         return $this->user()->isLikedProduct($product_id);
     }
 
+    public function isFollowing($following_user_id)
+    {
+        return $this->user()->isFollowing($following_user_id);
+    }
+
     /**
      * Attempt to log the user into the application.
      *

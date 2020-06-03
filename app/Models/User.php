@@ -131,6 +131,16 @@ class User extends Authenticatable
         ];
     }
 
+    public function isFollowing($following_user_id) {
+        $isFollowing =
+            $this->followings()
+                ->where('id', $following_user_id)
+                ->get()->isNotEmpty();
+        return [
+            'is_following' => $isFollowing,
+        ];
+    }
+
     public function transfer($toId, $amount) {
         DB::beginTransaction();
         $this->wallet->withdraw($amount);
