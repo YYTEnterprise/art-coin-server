@@ -20,7 +20,7 @@ class CreateProductsTable extends Migration
             $table->text('brief_desc')->comment('产品详情');
             $table->text('detail_desc')->comment('详情描述');
             $table->string('cover_image')->comment('封面图片路径');
-            $table->decimal('price', 10, 4)->comment('商品价格');
+            $table->decimal('price', 10, 4)->nullable()->comment('商品价格');
             $table->enum('deliver_type', ['express', 'email'])->comment('交付方式: 实物-快递, 虚拟-邮件');
             $table->boolean('has_deliver_fee')->nullable()->comment('是否包含运费: true/false（实物产品必填）');
             $table->boolean('has_tariff')->nullable()->comment('是否包含关税: true/false（实物产品必填）');

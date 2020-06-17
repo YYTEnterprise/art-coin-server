@@ -46,7 +46,7 @@ class ProductController extends Controller
             'brief_desc' => 'required|string',
             'detail_desc' => 'required|string',
             'cover_image' => 'required|string|max:255',
-            'price' => 'required|numeric',
+            'price' => 'required_if:sale_way,direct|numeric',
             'deliver_type' => 'required|string|in:express,email',
             'has_deliver_fee' => 'required_if:deliver_type,express|boolean',
             'has_tariff' => 'required_if:deliver_type,express|boolean',
