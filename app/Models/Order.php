@@ -81,5 +81,7 @@ class Order extends Model
         ];
         $order->items()->create($orderItemArray);
         DB::commit();
+
+        return $order;
     }
 }

@@ -83,9 +83,9 @@ class OrderController extends Controller
             'street',
             'postcode',
         ]);
-        Order::new($this->user(), $product, $product['price'], $shippingArray);
+        $order = Order::new($this->user(), $product, $product['price'], $shippingArray);
 
-        return new Response('', 201);
+        return $order;
     }
 
     public function showBuyOrder($id)
