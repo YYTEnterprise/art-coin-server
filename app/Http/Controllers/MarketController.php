@@ -17,6 +17,7 @@ class MarketController extends Controller
         $request->validate([
             'page' => 'integer',
             'per_page' => 'integer',
+            'sale_way' => 'string|in:direct,auction',
         ]);
 
         $per_page = 10;
@@ -25,10 +26,18 @@ class MarketController extends Controller
             $per_page = $request->input('per_page');
         }
 
-        return Product::where('on_sale', true)
-            ->withCount('likes')
-            ->with('auction')
-            ->paginate($per_page);
+        if  ($request->has('sale_way')) {
+            return Product::where('on_sale', true)
+                ->where('sale_way', $request->has('sale_way'))
+                ->withCount('likes')
+                ->with('auction')
+                ->paginate($per_page);
+        } else {
+            return Product::where('on_sale', true)
+                ->withCount('likes')
+                ->with('auction')
+                ->paginate($per_page);
+        }
     }
 
     /**
