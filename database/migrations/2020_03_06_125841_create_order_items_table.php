@@ -17,7 +17,7 @@ class CreateOrderItemsTable extends Migration
             $table->id();
             $table->unsignedBigInteger('order_id')->index();
             $table->unsignedBigInteger('product_id');
-            $table->decimal('price', 10, 4)->comment("商品价格");
+            $table->decimal('price', 10, 4)->nullable()->comment("商品价格");
             $table->decimal('amount', 10, 4)->comment("商品出售价格");
             $table->unsignedInteger('count')->comment('商品出售数量');
             $table->timestamps();

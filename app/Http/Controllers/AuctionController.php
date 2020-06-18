@@ -9,6 +9,7 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class AuctionController extends Controller
@@ -189,7 +190,19 @@ class AuctionController extends Controller
     {
         $request->validate([
             'bid_price' => 'required|numeric',
+            'password' => 'string',
         ]);
+
+        // check payment password
+        $user = $this->user();
+        $password = $request->input('password');
+        if (empty($user->pay_passwd)) {
+            throw new BadRequestHttpException('The payement password is not set, please set the password first.');
+        } else {
+            if(!Hash::check($password, $user->pay_passwd)) {
+                throw new BadRequestHttpException('The payment password is not correct.');
+            }
+        }
 
         $bidPrice = $request->input('bid_price');
         $userId = $this->userId();
@@ -224,9 +237,24 @@ class AuctionController extends Controller
      * @param $id
      * @return Response
      */
-    public function fixed($id)
+    public function fixed(Request $request, $id)
     {
+        $request->validate([
+            'password' => 'string',
+        ]);
+
         DB::beginTransaction();
+
+        // check payment password
+        $user = $this->user();
+        $password = $request->input('password');
+        if (empty($user->pay_passwd)) {
+            throw new BadRequestHttpException('The payement password is not set, please set the password first.');
+        } else {
+            if(!Hash::check($password, $user->pay_passwd)) {
+                throw new BadRequestHttpException('The payment password is not correct.');
+            }
+        }
 
         $userId = $this->userId();
         $auction = Auction::findOrFail($id);
