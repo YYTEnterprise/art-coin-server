@@ -55,7 +55,7 @@ class ProductController extends Controller
             'sale_way' => 'required|string|in:direct,auction',
         ]);
 
-        $this->user()->products()->create($request->only([
+        $product = $this->user()->products()->create($request->only([
             'title',
             'brief_desc',
             'detail_desc',
@@ -69,7 +69,7 @@ class ProductController extends Controller
             'sale_way',
         ]));
 
-        return new Response('', 201);
+        return $product;
     }
 
     /**

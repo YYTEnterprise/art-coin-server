@@ -42,6 +42,7 @@ class MarketController extends Controller
         return Product::where('on_sale', true)
             ->withCount('likes')
             ->with('auction')
+            ->with('user')
             ->findOrFail($id);
     }
 }
