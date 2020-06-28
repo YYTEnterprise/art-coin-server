@@ -28,14 +28,16 @@ class MarketController extends Controller
 
         if  ($request->has('sale_way')) {
             return Product::where('on_sale', true)
-                ->where('sale_way', $request->has('sale_way'))
+                ->where('sale_way', $request->input('sale_way'))
                 ->withCount('likes')
                 ->with('auction')
+                ->orderBy('updated_at', 'desc')
                 ->paginate($per_page);
         } else {
             return Product::where('on_sale', true)
                 ->withCount('likes')
                 ->with('auction')
+                ->orderBy('updated_at', 'desc')
                 ->paginate($per_page);
         }
     }
