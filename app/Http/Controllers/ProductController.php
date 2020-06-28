@@ -30,6 +30,7 @@ class ProductController extends Controller
             ->products()
             ->withCount('likes')
             ->with('auction')
+            ->orderBy('updated_at', 'desc')
             ->paginate($per_page);
     }
 
