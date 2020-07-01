@@ -44,7 +44,7 @@ class AuctionController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'product_id' => 'integer|exists:products,id',
+            'product_id' => 'required|integer|exists:products,id',
             'start_price' => 'required|numeric',
             'step_price' => 'required|numeric',
             'fixed_price' => 'numeric',
