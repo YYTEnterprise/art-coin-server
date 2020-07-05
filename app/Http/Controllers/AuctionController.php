@@ -64,14 +64,17 @@ class AuctionController extends Controller
             throw new BadRequestHttpException('Cannot create new auction, an existed auction has not finished yet');
         }
 
-        $auction = Auction::create($request->only([
+        $currentPrice = $request->input('start_price');
+        $params = $request->only([
             'product_id',
             'start_price',
             'step_price',
             'fixed_price',
             'start_at',
             'end_at',
-        ]));
+        ]);
+        $params['current_price'] = $currentPrice;
+        $auction = Auction::create($params);
 
         return $auction;
     }
