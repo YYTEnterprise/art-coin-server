@@ -16,6 +16,7 @@ class CreateProductsTable extends Migration
         Schema::create('products', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
+            $table->unsignedInteger('stock_quantity')->default(1)->comment('库存数量');
             $table->string('title')->comment('产品名称');
             $table->text('brief_desc')->comment('产品详情');
             $table->text('detail_desc')->comment('详情描述');
