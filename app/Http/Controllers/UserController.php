@@ -86,7 +86,7 @@ class UserController extends Controller
     public function updateSettings(Request $request)
     {
         $request->validate([
-            'nickname' => 'string|max:20',
+            'name' => 'string|max:20',
             'avatar_url' => 'string|max:255',
             'cover_image_url' => 'string|max:255',
             'country' => 'string|max:255',
@@ -95,7 +95,7 @@ class UserController extends Controller
         $userId = $this->userId();
         $user = User::findOrFail($userId);
         $user->update($request->only([
-            'nickname',
+            'name',
             'avatar_url',
             'cover_image_url',
             'country',
