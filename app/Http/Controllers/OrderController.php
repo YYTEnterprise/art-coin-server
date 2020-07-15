@@ -26,7 +26,10 @@ class OrderController extends Controller
             $per_page = $request->input('per_page');
         }
 
-        return $this->user()->buyOrders()->paginate($per_page);
+        return $this->user()
+            ->buyOrders()
+            ->with('items')
+            ->paginate($per_page);
     }
 
     public function sellIndex(Request $request)
@@ -42,7 +45,10 @@ class OrderController extends Controller
             $per_page = $request->input('per_page');
         }
 
-        return $this->user()->sellOrders()->paginate($per_page);
+        return $this->user()
+            ->sellOrders()
+            ->with('items')
+            ->paginate($per_page);
     }
 
     /**

@@ -42,7 +42,8 @@ class Auction extends Model
     }
 
     public function bids() {
-        return $this->hasMany(Bid::class);
+        return $this->hasMany(Bid::class)
+            ->orderBy('bid_at', 'desc');
     }
 
     // 用户竞标

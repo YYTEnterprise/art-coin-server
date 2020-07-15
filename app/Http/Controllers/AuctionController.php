@@ -90,10 +90,11 @@ class AuctionController extends Controller
         $auction = $this->user()
             ->auctions()
             ->with('product')
+            ->with('bids')
             ->findOrFail($id);
 
         $sellerId = $auction['product']['user_id'];
-        $seller = User::find($sellerId);
+        $seller = User::findOrFail($sellerId);
         $auction['seller'] = $seller;
 
         return $auction;

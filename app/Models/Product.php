@@ -54,7 +54,8 @@ class Product extends Model
     // 拍卖，sale_way = auction 时存在该数据
     public function auction()
     {
-        return $this->hasOne(Auction::class);
+        return $this->hasOne(Auction::class)
+            ->with('bids');
     }
 
     public function orderItem() {
