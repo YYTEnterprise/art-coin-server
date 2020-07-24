@@ -141,9 +141,12 @@ class Auction extends Model
                     'purchase_price' => $auction['current_price'],
                     'status' => Auction::STATUS_BID_SUCCESS,
                 ]);
-                // 创建订单
                 $user = $auction->currentBidUser;
+
+                // 商品下架
                 $product = $auction->product;
+                $product->update(['on_sale' => false]);
+                // 创建订单
                 $amount = $auction['current_price'];
                 Order::new($user, $product, $amount);
             }

@@ -276,8 +276,10 @@ class AuctionController extends Controller
         }
         $auction->newFixed($userId, $auction['fixed_price']);
 
-        // 创建订单
+        // 商品下架
         $product = Product::findOrFail($auction['product_id']);
+        $product->update(['on_sale' => false]);
+        // 创建订单
         $amount = $auction['fixed_price'];
         Order::new($this->user(), $product, $amount);
 
