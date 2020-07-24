@@ -81,6 +81,15 @@ Route::middleware(['auth:api'])->group(function () {
         Route::delete('/{image_path}', 'ImageController@destroy');
     });
 
+    Route::prefix('carts')->group(function () {
+        Route::get('/', 'CartController@index');
+        Route::get('/{id}', 'CartController@show');
+        Route::post('/', 'CartController@store');
+        Route::post('/{id}/add_item', 'CartController@addItem');
+        Route::post('/{id}/remove_item', 'CartController@removeItem');
+        Route::post('/{id}/update_item', 'CartController@updateItem');
+    });
+
     Route::prefix('orders')->group(function () {
         Route::get('/seller', 'OrderController@sellIndex');
         Route::get('/buyer', 'OrderController@buyIndex');

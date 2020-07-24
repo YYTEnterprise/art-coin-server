@@ -96,6 +96,11 @@ class User extends Authenticatable
         return $this->hasMany(Order::class, 'buyer_id');
     }
 
+    public function carts()
+    {
+        return $this->hasMany(Cart::class);
+    }
+
     // 用户参与的竞标，且用户出价最高
     public function bidAuctions()
     {
