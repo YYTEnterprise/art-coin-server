@@ -60,6 +60,41 @@ class Order extends Model
         return $this->hasMany(OrderRefund::class);
     }
 
+    public static function newFromCart($user, $cart, $shippingArray = [])
+    {
+        $cartItems = $cart->items;
+        DB::beginTransaction();
+        $orderArray = [
+            'sale_way' => Product::SALE_WAY_DIRECT,
+            'total_amount' => $cart->totalAmount(),
+            'seller_id' => 0,
+            'pay_method' => Order::PAY_METHOD_ART_COIN,
+        ];
+        $order = $user->buyOrders()->create($orderArray);
+
+        // TODO
+        $shippingArray['seller_id'] = 0;
+        $shippingArray['status'] = Shipping::STATUS_PENDING;
+        $order->shipping()->create($shippingArray);
+
+        foreach ($cartItems as $item) {
+            $orderItemArray = [
+                'product_id' => $item['id'],
+                'price' => $item['price'],
+                'amount' => $item['amount'],
+                'count' => $item['count'],
+            ];
+            $order->items()->create($orderItemArray);
+        }
+        $cart->update([
+            'status' => Cart::CART_STATUS_COMPLETE
+        ]);
+
+        DB::commit();
+
+        return $order;
+    }
+
     public static function new($user, $product, $amount, $shippingArray = [])
     {
         DB::beginTransaction();

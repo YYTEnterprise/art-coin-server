@@ -24,4 +24,14 @@ class Cart extends Model
     {
         return $this->belongsTo(User::class);
     }
+
+    public function totalAmount() {
+        $totalItems = $this->items;
+        $totalAmount = 0;
+        foreach ($totalItems as $item) {
+            $totalAmount += $item['amount'] * $item['count'];
+        }
+
+        return $totalAmount;
+    }
 }

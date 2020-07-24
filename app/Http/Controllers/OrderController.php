@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cart;
 use App\Models\Order;
 use App\Models\Product;
 use App\Models\Shipping;
@@ -60,7 +61,7 @@ class OrderController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'product_id' => 'required|integer|exists:products,id',
+            'cart_id' => 'required|integer|exists:carts,id',
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'phone' => 'required|string|max:255',
@@ -73,9 +74,9 @@ class OrderController extends Controller
             'postcode' => 'required|string|max:255',
         ]);
 
-        $product = Product::findOrFail($request->input('product_id'));
-        if($product['sale_way'] !== Product::SALE_WAY_DIRECT) {
-            throw new BadRequestHttpException('Cannot create new order, the sale way of product is not direct');
+        $cart = Cart::findOrFail($request->input('cart_id'));
+        if($cart['status'] !== Cart::CART_STATUS_PENDING) {
+            throw new BadRequestHttpException('Cannot create new order, the status of cart is not pending');
         }
         $shippingArray = $request->only([
             'first_name',
@@ -89,7 +90,7 @@ class OrderController extends Controller
             'street',
             'postcode',
         ]);
-        $order = Order::new($this->user(), $product, $product['price'], $shippingArray);
+        $order = Order::newFromCart($this->user(), $cart, $shippingArray);
 
         return $order;
     }

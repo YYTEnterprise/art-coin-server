@@ -65,6 +65,9 @@ class CartController extends Controller
 
         $productId = $request->input('product_id');
         $product = Product::findOrFail($productId);
+        if($product['sale_way'] !== Product::SALE_WAY_DIRECT) {
+            throw new BadRequestHttpException('Cannot add this product to cart, the sale way of product is not direct');
+        }
 
         $cart->items()->create([
             'product_id' => $productId,
