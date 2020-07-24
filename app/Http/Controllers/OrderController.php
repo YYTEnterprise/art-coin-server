@@ -98,6 +98,8 @@ class OrderController extends Controller
     {
         return $this->user()
             ->buyOrders()
+            ->with('buyer')
+            ->with('seller')
             ->with('items')
             ->with('shipping')
             ->with('pays')
@@ -109,6 +111,8 @@ class OrderController extends Controller
     {
         return $this->user()
             ->sellOrders()
+            ->with('buyer')
+            ->with('seller')
             ->with('items')
             ->with('shipping')
             ->with('pays')

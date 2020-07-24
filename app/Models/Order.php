@@ -31,12 +31,12 @@ class Order extends Model
 
     public function buyer()
     {
-        return $this->belongsTo(User::class, 'id', 'buyer_id');
+        return $this->belongsTo(User::class, 'buyer_id', 'id');
     }
 
     public function seller()
     {
-        return $this->belongsTo(User::class, 'id', 'seller_id');
+        return $this->belongsTo(User::class, 'seller_id', 'id');
     }
 
     public function items()
