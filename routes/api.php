@@ -87,6 +87,7 @@ Route::middleware(['auth:api'])->group(function () {
         Route::get('/seller/{id}', 'OrderController@showSellOrder');
         Route::get('/buyer/{id}', 'OrderController@showBuyOrder');
         Route::post('/buyer', 'OrderController@store');
+        Route::post('/buyer/{id}/cancel', 'OrderController@cancel');
         Route::post('/buyer/{id}/pay', 'OrderController@pay');
         Route::post('/seller/{id}/shipping', 'OrderController@shipping');
         Route::post('/buyer/{id}/confirm', 'OrderController@confirm');

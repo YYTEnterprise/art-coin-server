@@ -15,6 +15,7 @@ class Order extends Model
     const PAY_STATUS_REFUNDED = 'refund';
     const PAY_STATUS_REFUNDED_FAILED = 'refund_failed';
     const PAY_STATUS_COMPLETE = 'complete';
+    const PAY_STATUS_CANCEL = 'cancel';
 
     const PAY_METHOD_ART_COIN = 'art_coin';
 

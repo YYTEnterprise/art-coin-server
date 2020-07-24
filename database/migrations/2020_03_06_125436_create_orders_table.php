@@ -21,8 +21,10 @@ class CreateOrdersTable extends Migration
             $table->decimal('total_amount', 10, 4)->comment("订单总价");
             $table->enum('pay_method', ['art_coin'])->nullable()->comment('支付方式');
             $table->enum('status', [
-                'pending', 'paying', 'paid', 'pay_failed', 'refunding', 'refund', 'refund_failed', 'complete']
-            )->default('pending')->comment('订单状态：未支付、支付中、已支付、支付失败、退款中、已退款、退款失败, 订单完成');
+                'pending', 'paying', 'paid', 'pay_failed', 'refunding', 'refund', 'refund_failed', 'complete', 'cancel'
+            ])
+                ->default('pending')
+                ->comment('订单状态：未支付、支付中、已支付、支付失败、退款中、已退款、退款失败, 订单完成、 订单取消');
             $table->unsignedBigInteger('order_pay_id')->nullable();
             $table->unsignedBigInteger('order_refund_id')->nullable();
             $table->timestamps();

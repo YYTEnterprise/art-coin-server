@@ -211,4 +211,24 @@ class OrderController extends Controller
 
         return new Response('', 200);
     }
+
+    /**
+     * 买家取消订单
+     *
+     * @param $id
+     * @return Response
+     */
+    public function cancel($id) {
+        // 获取订单
+        $order = $this->user()->buyOrders()->findOrFail($id);
+        if($order['status'] !== Order::PAY_STATUS_PENDING) {
+            throw new BadRequestHttpException('Cannot cancel for the order, the status of this order is not pending.');
+        }
+        // 更新订单状态
+        $order->update([
+            'status' => Order::PAY_STATUS_CANCEL,
+        ]);
+
+        return new Response('', 200);
+    }
 }
