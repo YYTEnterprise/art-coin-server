@@ -61,4 +61,12 @@ class Product extends Model
     public function orderItem() {
         return $this->hasOne(OrderItem::class);
     }
+
+    public function onSale() {
+        return $this->update(['on_sale' => true]);
+    }
+
+    public function offSale() {
+        return $this->update(['on_sale' => false]);
+    }
 }

@@ -145,7 +145,7 @@ class Auction extends Model
 
                 // 商品下架
                 $product = $auction->product;
-                $product->update(['on_sale' => false]);
+                $product->offSale();
                 // 创建订单
                 $amount = $auction['current_price'];
                 Order::new($user, $product, $amount);

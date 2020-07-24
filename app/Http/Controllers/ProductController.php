@@ -146,14 +146,14 @@ class ProductController extends Controller
 
     public function onsale($id)
     {
-        $this->user()->products()->findOrFail($id)->update(['on_sale' => true]);
+        $this->user()->products()->findOrFail($id)->onSale();
 
         return new Response('', 200);
     }
 
     public function offsale($id)
     {
-        $this->user()->products()->findOrFail($id)->update(['on_sale' => false]);
+        $this->user()->products()->findOrFail($id)->offSale();
 
         return new Response('', 200);
     }
