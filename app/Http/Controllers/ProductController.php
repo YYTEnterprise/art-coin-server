@@ -101,6 +101,7 @@ class ProductController extends Controller
     public function update(Request $request, $id)
     {
         $request->validate([
+            'stock_quantity' => 'required_if:sale_way,direct|integer|min:1',
             'title' => 'string|max:255',
             'brief_desc' => 'string',
             'detail_desc' => 'string',
@@ -115,6 +116,7 @@ class ProductController extends Controller
         $product = $this->user()->products()->findOrFail($id);
 
         $product->update($request->only([
+            'stock_quantity',
             'title',
             'brief_desc',
             'detail_desc',
