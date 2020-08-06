@@ -61,7 +61,6 @@ class OrderController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'cart_id' => 'required|integer|exists:carts,id',
             'first_name' => 'required|string|max:255',
             'last_name' => 'required|string|max:255',
             'phone' => 'required|string|max:255',
@@ -74,10 +73,6 @@ class OrderController extends Controller
             'postcode' => 'required|string|max:255',
         ]);
 
-        $cart = Cart::findOrFail($request->input('cart_id'));
-        if($cart['status'] !== Cart::CART_STATUS_PENDING) {
-            throw new BadRequestHttpException('Cannot create new order, the status of cart is not pending');
-        }
         $shippingArray = $request->only([
             'first_name',
             'last_name',
@@ -90,7 +85,7 @@ class OrderController extends Controller
             'street',
             'postcode',
         ]);
-        $order = Order::newFromCart($this->user(), $cart, $shippingArray);
+        $order = Order::newFromCart($this->user(), $shippingArray);
 
         return $order;
     }

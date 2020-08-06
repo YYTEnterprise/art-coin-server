@@ -80,20 +80,19 @@ Route::middleware(['auth:api'])->group(function () {
         Route::delete('/addresses/{id}', 'UserAddressController@destroy');
         Route::get('/addresses', 'UserAddressController@index');
         Route::get('/addresses/{id}', 'UserAddressController@show');
+
+        Route::prefix('carts')->group(function () {
+            Route::get('/', 'CartController@show');
+            Route::post('/add_item', 'CartController@addItem');
+            Route::post('/remove_item', 'CartController@removeItem');
+            Route::post('/remove_all', 'CartController@removeAll');
+            Route::post('/update_item', 'CartController@updateItem');
+        });
     });
 
     Route::prefix('images')->group(function () {
         Route::post('/upload', 'ImageController@upload');
         Route::delete('/{image_path}', 'ImageController@destroy');
-    });
-
-    Route::prefix('carts')->group(function () {
-        Route::get('/', 'CartController@index');
-        Route::get('/{id}', 'CartController@show');
-        Route::post('/', 'CartController@store');
-        Route::post('/{id}/add_item', 'CartController@addItem');
-        Route::post('/{id}/remove_item', 'CartController@removeItem');
-        Route::post('/{id}/update_item', 'CartController@updateItem');
     });
 
     Route::prefix('orders')->group(function () {

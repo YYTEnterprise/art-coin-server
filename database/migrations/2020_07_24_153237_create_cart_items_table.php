@@ -15,7 +15,7 @@ class CreateCartItemsTable extends Migration
     {
         Schema::create('cart_items', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('cart_id')->index();
+            $table->unsignedBigInteger('user_id')->index();
             $table->unsignedBigInteger('product_id');
             $table->decimal('price', 10, 4)->nullable()->comment("商品价格");
             $table->decimal('amount', 10, 4)->comment("商品出售价格");

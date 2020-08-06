@@ -53,6 +53,21 @@ class User extends Authenticatable
         return $this->hasMany(UserAddress::class);
     }
 
+    public function cartItems()
+    {
+        return $this->hasMany(CartItem::class);
+    }
+
+    public function cartTotalAmount() {
+        $totalItems = $this->cartItems;
+        $totalAmount = 0;
+        foreach ($totalItems as $item) {
+            $totalAmount += $item['amount'] * $item['count'];
+        }
+
+        return $totalAmount;
+    }
+
     // 关注我的人，相当于微博中的“粉丝”
     public function followers()
     {
