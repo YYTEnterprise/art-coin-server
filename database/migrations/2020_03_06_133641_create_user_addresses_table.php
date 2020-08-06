@@ -16,14 +16,16 @@ class CreateUserAddressesTable extends Migration
         Schema::create('user_addresses', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('user_id');
-            $table->string('province');
-            $table->string('city');
-            $table->string('district');
-            $table->string('address');
-            $table->unsignedInteger('zip');
-            $table->string('contact_name');
-            $table->string('contact_phone');
-            $table->dateTime('last_used_at')->nullable();
+            $table->string('first_name')->nullable();
+            $table->string('last_name')->nullable();
+            $table->string('phone')->nullable();
+            $table->string('email')->nullable();
+            $table->string('company')->nullable();
+            $table->string('country')->nullable();
+            $table->string('province')->nullable();
+            $table->string('city')->nullable();
+            $table->string('street')->nullable();
+            $table->string('postcode')->nullable();
             $table->timestamps();
         });
     }

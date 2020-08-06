@@ -74,6 +74,12 @@ Route::middleware(['auth:api'])->group(function () {
         Route::get('/likes', 'UserController@myLikeProducts');
         Route::get('/products/{product_id}/is_like', 'UserController@isLikedProduct');
         Route::get('/{following_user_id}/is_following', 'UserController@isFollowing');
+
+        Route::post('/addresses', 'UserAddressController@store');
+        Route::put('/addresses/{id}', 'UserAddressController@update');
+        Route::delete('/addresses/{id}', 'UserAddressController@destroy');
+        Route::get('/addresses', 'UserAddressController@index');
+        Route::get('/addresses/{id}', 'UserAddressController@show');
     });
 
     Route::prefix('images')->group(function () {
