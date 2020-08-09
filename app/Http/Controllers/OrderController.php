@@ -61,16 +61,11 @@ class OrderController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'first_name' => 'string|max:255',
-            'last_name' => 'string|max:255',
+            'first_name' => 'required|string|max:255',
             'phone' => 'required|string|max:255',
             'email' => 'required|email',
-            'company' => 'string|max:255',
             'country' => 'required|string|max:255',
-            'province' => 'string|max:255',
-            'city' => 'string|max:255',
             'street' => 'required|string|max:255',
-            'postcode' => 'string|max:255',
         ]);
 
         $shippingArray = $request->only([
