@@ -86,6 +86,8 @@ class Order extends Model
             ];
             $order->items()->create($orderItemArray);
         }
+        // 下单后清空购物车
+        $user->cartItems()->delete();
 
         DB::commit();
 

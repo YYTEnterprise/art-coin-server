@@ -58,7 +58,7 @@ class UserAddressController extends Controller
 
     public function destroy($id)
     {
-        $this->user()->addresses()->delete($id);
+        $this->user()->addresses()->where('id', $id)->delete();
 
         return new Response('', 200);
     }

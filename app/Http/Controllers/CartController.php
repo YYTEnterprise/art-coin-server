@@ -53,7 +53,7 @@ class CartController extends Controller
         ]);
 
         $cartItemId = $request->input('cart_item_id');
-        $this->user()->cartItems()->delete($cartItemId);
+        $this->user()->cartItems()->where('id', $cartItemId)->delete();
 
         return $this->user()->cartItems;
     }
