@@ -117,5 +117,8 @@ Route::middleware(['auth:api'])->group(function () {
         Route::get('/', 'TradeController@index');
         Route::get('/{id}', 'TradeController@show');
         Route::post('/', 'TradeController@store');
+        Route::post('/pay', 'TradeController@pay');
+        Route::post('/confirm', 'TradeController@confirm');
+        Route::post('/cancel', 'TradeController@cancel');
     });
 });

@@ -22,6 +22,8 @@ class CreateTradesTable extends Migration
             $table->decimal('price', 10, 4)->comment("单价");
             $table->enum('trade_type', ['paypal'])->comment("交易方式");
             $table->string('trade_account')->comment('收款账户');
+            $table->enum('status', ['pending', 'paid', 'confirmed', 'canceled'])->default('pending')
+                ->comment("交易状态：等待中，已支付、已确认、已取消");
             $table->timestamps();
         });
     }
