@@ -24,6 +24,12 @@ Route::middleware(['api'])->group(function () {
         Route::get('/{id}', 'MarketController@show');
     });
 
+    Route::prefix('/tradeinfos')->group(function () {
+        Route::get('/', 'TradeInfoController@index');
+        Route::get('/{id}', 'TradeInfoController@show');
+        Route::post('/', 'TradeInfoController@store');
+    });
+
     Route::prefix('users')->group(function () {
         Route::get('/{id}/info', 'UserController@userInfo');
         Route::get('/{id}/products', 'UserController@productList');
@@ -105,5 +111,11 @@ Route::middleware(['auth:api'])->group(function () {
         Route::post('/buyer/{id}/pay', 'OrderController@pay');
         Route::post('/seller/{id}/shipping', 'OrderController@shipping');
         Route::post('/buyer/{id}/confirm', 'OrderController@confirm');
+    });
+
+    Route::prefix('/trades')->group(function () {
+        Route::get('/', 'TradeController@index');
+        Route::get('/{id}', 'TradeController@show');
+        Route::post('/', 'TradeController@store');
     });
 });

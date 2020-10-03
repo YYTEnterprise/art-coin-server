@@ -128,6 +128,11 @@ class User extends Authenticatable
         return $this->hasOne(Wallet::class);
     }
 
+    public function trades()
+    {
+        return $this->hasMany(Trade::class);
+    }
+
     // 用户点赞过的物品
     public function likes()
     {
