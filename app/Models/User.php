@@ -112,11 +112,6 @@ class User extends Authenticatable
         return $this->hasMany(Order::class, 'buyer_id');
     }
 
-    public function carts()
-    {
-        return $this->hasMany(Cart::class);
-    }
-
     // 用户参与的竞标，且用户出价最高
     public function bidAuctions()
     {
@@ -130,7 +125,7 @@ class User extends Authenticatable
 
     public function trades()
     {
-        return $this->hasMany(Trade::class);
+        return $this->hasMany(Trade::class, 'buyer_id');
     }
 
     // 用户点赞过的物品

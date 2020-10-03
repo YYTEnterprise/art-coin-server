@@ -39,6 +39,9 @@ Route::middleware(['api'])->group(function () {
     });
 
     Route::post('/products/{id}/likes', 'UserProductLikeController@likeList');
+
+    // TODO trader 鉴权
+    Route::post('/trades/{id}/confirm', 'TradeController@confirm');
 });
 
 // User Api
@@ -117,8 +120,7 @@ Route::middleware(['auth:api'])->group(function () {
         Route::get('/', 'TradeController@index');
         Route::get('/{id}', 'TradeController@show');
         Route::post('/', 'TradeController@store');
-        Route::post('/pay', 'TradeController@pay');
-        Route::post('/confirm', 'TradeController@confirm');
-        Route::post('/cancel', 'TradeController@cancel');
+        Route::post('/{id}/pay', 'TradeController@pay');
+        Route::post('/{id}/cancel', 'TradeController@cancel');
     });
 });

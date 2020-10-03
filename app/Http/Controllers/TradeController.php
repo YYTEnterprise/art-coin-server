@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Trade;
+use App\Models\TradeInfo;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
@@ -28,7 +29,7 @@ class TradeController extends Controller
             $per_page = $request->input('per_page');
         }
 
-        return Trade::with('trader')
+        return Trade::with('tradeInfo')
             ->with('buyer')
             ->orderBy('updated_at', 'desc')
             ->paginate($per_page);
@@ -43,24 +44,24 @@ class TradeController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'trader_id' => 'required|integer',
+            'trade_info_id' => 'required|integer|exists:trade_infos,id',
             'amount' => 'required|numeric',
             'usd_amount' => 'required|numeric',
-            'price' => 'required|numeric',
-            'trade_type' => 'required|string|in:paypal',
-            'trade_account' => 'required|string',
         ]);
 
-        $trade = $this->user()->trades()->create($request->only([
-            'trader_id',
+        $tradeInfo = TradeInfo::findOrFail($request->input('trade_info_id'));
+        $trader = $tradeInfo->trader;
+
+        $params = $request->only([
+            'trade_info_id',
             'amount',
             'usd_amount',
-            'price',
-            'trade_type',
-            'trade_account',
-        ]));
+        ]);
+        $params['price'] = $tradeInfo['price'];
+        $params['trade_type'] = $trader['trade_type'];
+        $params['trade_account'] = $trader['trade_account'];
 
-        return $trade;
+        return $this->user()->trades()->create($params);
     }
 
     /**
@@ -71,14 +72,14 @@ class TradeController extends Controller
      */
     public function show($id)
     {
-        return Trade::with('trader')
+        return Trade::with('tradeInfo')
             ->with('buyer')
             ->findOrFail($id);
     }
 
     public function pay($id)
     {
-        $trade = $this->user()->trades()->findOrFaild($id);
+        $trade = $this->user()->trades()->findOrFail($id);
         if ($trade['status'] != Trade::STATUS_PENDING) {
             throw new BadRequestHttpException('Cannot pay for the trade, the status of this trade is not pending.');
         }
@@ -90,7 +91,7 @@ class TradeController extends Controller
 
     public function confirm($id)
     {
-        $trade = Trade::findOrFaild($id);
+        $trade = Trade::findOrFail($id);
         if ($trade['status'] != Trade::STATUS_PAID) {
             throw new BadRequestHttpException('Cannot confirm the trade, the status of this trade is not paid.');
         }
@@ -104,7 +105,7 @@ class TradeController extends Controller
 
     public function cancel($id)
     {
-        $trade = $this->user()->trades()->findOrFaild($id);
+        $trade = $this->user()->trades()->findOrFail($id);
         if ($trade['status'] != Trade::STATUS_PENDING) {
             throw new BadRequestHttpException('Cannot pay for the trade, the status of this trade is not pending.');
         }

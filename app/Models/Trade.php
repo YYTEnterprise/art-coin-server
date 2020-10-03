@@ -8,11 +8,11 @@ class Trade extends Model
 {
     const STATUS_PENDING = 'pending';
     const STATUS_PAID = 'paid';
-    const STATUS_COMPLETE = 'complete';
-    const STATUS_CANCEL = 'cancel';
+    const STATUS_COMPLETE = 'confirmed';
+    const STATUS_CANCEL = 'canceled';
 
     protected $fillable = [
-        'trader_id',
+        'trade_info_id',
         'buyer_id',
         'amount',
         'usd_amount',
@@ -22,13 +22,13 @@ class Trade extends Model
         'status',
     ];
 
-    public function trader()
+    public function tradeInfo()
     {
-        return $this->belongsTo(Trader::class);
+        return $this->belongsTo(TradeInfo::class);
     }
 
     public function buyer()
     {
-        return $this->belongsTo(User::class);
+        return $this->belongsTo(User::class, 'buyer_id');
     }
 }

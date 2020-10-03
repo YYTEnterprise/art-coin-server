@@ -36,12 +36,12 @@ class TradeInfoController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @return Response
      */
     public function store(Request $request)
     {
         $request->validate([
-            'trader_id' => 'required|integer',
+            'trader_id' => 'required|integer|exists:traders,id',
             'max_amount' => 'required|numeric',
             'max_usd_amount' => 'required|numeric',
             'min_usd_amount' => 'required|numeric',
@@ -64,8 +64,8 @@ class TradeInfoController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param int $id
+     * @return \Illuminate\Database\Eloquent\Builder|\Illuminate\Database\Eloquent\Builder[]|\Illuminate\Database\Eloquent\Collection|\Illuminate\Database\Eloquent\Model
      */
     public function show($id)
     {

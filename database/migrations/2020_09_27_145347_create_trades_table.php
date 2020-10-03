@@ -15,7 +15,7 @@ class CreateTradesTable extends Migration
     {
         Schema::create('trades', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('trader_id')->index();
+            $table->unsignedBigInteger('trade_info_id')->index();
             $table->unsignedBigInteger('buyer_id')->index();
             $table->decimal('amount', 10, 4)->comment("购买数量");
             $table->decimal('usd_amount', 10, 4)->comment("支付 USD 数量");
