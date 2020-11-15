@@ -43,10 +43,12 @@ class UserController extends Controller
             'password' => ['required', 'string'],
         ])->validate();
 
+        $password = Hash::make($data['password']);
         $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
-            'password' => Hash::make($data['password']),
+            'password' => $password,
+            'pay_passwd' => $password,
         ]);
         $user->wallet()->save(new Wallet());
 
